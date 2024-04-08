@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+div#inputs {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+  gap: 20px;
+}
+
+div#inputs div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  gap: 50px;
+}

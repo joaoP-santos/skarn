@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Rosarivo:ital@0;1&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+div {
+  position: absolute;
+  display: block;
+  padding: 30px;
+}
+
+p {
+  color: #13678a;
+  font-weight: bolder;
+  font-size: xx-large;
+  font-family: "Rosarivo", cursive;
+}
+
+input {
+  width: 100%;
+  accent-color: #dafdba;
+}
+
+input::-webkit-slider-thumb {
+  background-color: #dafdba;
+}
