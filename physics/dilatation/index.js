@@ -52,7 +52,7 @@ scene.add(variationCube);
 scene.add(cylinder);
 
 const inputs = document.querySelectorAll("input");
-const outputs = document.querySelectorAll("p");
+const outputs = document.querySelectorAll("strong");
 var inputDown = false;
 
 inputs.forEach((input) => {
@@ -102,8 +102,7 @@ function animate() {
     initialVolume: inputs[2].value,
   };
   outputs.forEach((o, key) => {
-    o.innerHTML = `${o.getAttribute("placeholder")} 
-<br>${Object.values(physicsData)[key]}`;
+    o.innerHTML = `${Object.values(physicsData)[key]}`;
   });
 
   initialCube.scale.set(
@@ -116,7 +115,7 @@ function animate() {
     ((physicsData.temperature * 0.05 * physicsData.initialVolume) / 50) *
     physicsData.coefficient;
 
-  if (volumeVariation < initialCube.scale.x) {
+  if (volumeVariation < 0) {
     initialCube.material.opacity = 0.5;
     variationCube.material.opacity = 1;
   } else {
@@ -124,7 +123,11 @@ function animate() {
     variationCube.material.opacity = 0.5;
   }
 
-  variationCube.scale.set(volumeVariation, volumeVariation, volumeVariation);
+  variationCube.scale.set(
+    initialCube.scale.x + volumeVariation,
+    initialCube.scale.y + volumeVariation,
+    initialCube.scale.z + volumeVariation
+  );
 
   renderer.render(scene, camera);
   if (!mouseDown || inputDown) {
