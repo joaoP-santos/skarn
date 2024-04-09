@@ -28,19 +28,20 @@ function animate() {
   requestAnimationFrame(animate);
   numerator.max = denominator.value;
   c.clearRect(0, 0, innerWidth, innerHeight);
+  c.fill();
   c.lineWidth = 5;
   c.beginPath();
   c.rect(rectX, rectY, rectWidth, rectHeight);
-  c.strokeStyle = "#13678A";
+  c.strokeStyle = "#001B24";
   c.stroke();
   c.fillStyle = "#45C4B0";
   c.fill();
 
   for (var i = 0; i < denominator.value; i++) {
     if (numerator.value > i) {
-      c.fillStyle = "#DAFDBA";
+      c.fillStyle = "#51BBFE";
     } else {
-      c.fillStyle = "#45C4B0";
+      c.fillStyle = "#035E7B";
     }
     c.beginPath();
     c.rect(
@@ -53,13 +54,17 @@ function animate() {
     c.stroke();
     c.fill();
   }
-  c.font = `bold ${0.1 * innerHeight}px Arial`;
+  c.font = `bold ${0.1 * innerHeight}px Itim`;
+  c.fillStyle = "#51BBFE";
   c.textAlign = "center";
   c.fillText(numerator.value, innerWidth / 2, (innerHeight * 2) / 20);
+
   c.beginPath();
   c.moveTo(innerWidth / 2 - innerHeight * 0.1, (innerHeight * 7) / 50);
   c.lineTo(innerWidth / 2 + innerHeight * 0.1, (innerHeight * 7) / 50);
   c.stroke();
+
+  c.fillStyle = "#035E7B";
   c.fillText(denominator.value, innerWidth / 2, (innerHeight * 5) / 20);
 }
 

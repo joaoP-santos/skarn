@@ -1,3 +1,5 @@
+@import url('../../root.css');
+
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +11,9 @@ body {
 }
 
 strong {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--itim);
+  font-size: 1.5em;
+  color: var(--dark-blue)
 }
 
 input {
