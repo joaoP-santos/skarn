@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rosarivo:ital@0;1&display=swap");
+@import url('../../root.css');
 
 * {
   margin: 0;
@@ -17,17 +17,17 @@ div {
 }
 
 p {
-  color: #13678a;
+  color: var(--dark-blue);
   font-weight: bolder;
   font-size: xx-large;
-  font-family: "Rosarivo", cursive;
+  font-family: var(--itim);
 }
 
 input {
   width: 100%;
-  accent-color: #dafdba;
+  accent-color: var(--light-yellow);
 }
 
 input::-webkit-slider-thumb {
-  background-color: #dafdba;
+  background-color: var(--light-yellow);
 }

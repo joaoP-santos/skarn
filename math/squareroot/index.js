@@ -42,12 +42,12 @@ function animate() {
   c.clearRect(0, 0, innerWidth, innerHeight);
   c.rect(0, 0, innerWidth, innerHeight);
 
-  c.fillStyle = "#9AEBA3";
+  c.fillStyle = "#8FF7A7";
   c.fill();
   c.lineWidth = 5;
   c.beginPath();
   c.rect(rectX, rectY, rectLength, rectLength);
-  c.fillStyle = "#DAFDBA";
+  c.fillStyle = "#FCFFBE";
   c.fill();
   for (let x = 0; x < side; x++) {
     for (let y = 0; y < side; y++) {
@@ -78,12 +78,12 @@ function animate() {
   c.lineWidth = 5;
   c.beginPath();
   c.rect(rectX, rectY, rectLength, rectLength);
-  c.strokeStyle = "#13678A";
+  c.strokeStyle = "#035E7B";
   c.stroke();
 
-  c.font = `bold ${0.05 * innerHeight}px Rosarivo`;
+  c.font = `bold ${0.05 * innerHeight}px Itim`;
   c.textAlign = "center";
-  c.fillStyle = "#13678A";
+  c.fillStyle = "#035E7B";
   c.fillText(
     `Área total: ${Math.pow(side, 2)}`,
     innerWidth / 2,
