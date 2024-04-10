@@ -43,9 +43,12 @@ section {
 }
 
 .subject-section {
-  min-height: 50vh;
+  min-height: 25vh;
+
   font-family: Itim, serif;
 
+  display: flex;
+  flex-direction: column;
 }
 
 section h3 {
@@ -53,11 +56,15 @@ section h3 {
   color: #005773;
 
   margin-bottom: 12px;
+
 }
 
 .subject-section>div {
   display: flex;
-  gap: 18px
+
+
+  gap: 18px;
+
 }
 
 .subject-section>div>a {
