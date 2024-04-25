@@ -39,7 +39,7 @@ function animate() {
 
   for (var i = 0; i < denominator.value; i++) {
     if (numerator.value > i) {
-      c.fillStyle = "#51BBFE";
+      c.fillStyle = "#8FF7A7";
     } else {
       c.fillStyle = "#035E7B";
     }
@@ -55,7 +55,7 @@ function animate() {
     c.fill();
   }
   c.font = `bold ${0.1 * innerHeight}px Itim`;
-  c.fillStyle = "#51BBFE";
+  c.fillStyle = "#8FF7A7";
   c.textAlign = "center";
   c.fillText(numerator.value, innerWidth / 2, (innerHeight * 2) / 20);
 

@@ -1,0 +1,32 @@
+@import url('../../root.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: var(--itim);
+}
+
+div#inputs {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+  width: 25vw;
+
+  padding: 20px;
+  gap: 10px;
+}
+
+div#inputs div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  gap: 40px;
+}
+
+p {
+  font-size: 1.25em;
+}
