@@ -1,3 +1,133 @@
+<script setup>
+definePageMeta({
+  layout: "default",
+});
+
+useHead({
+  title: "Home",
+});
+</script>
+
 <template>
-  <h1>Skarn.</h1>
+  <main>
+    <h1>Skarn</h1>
+    <h6>recursos pedagógicos interativos para todos</h6>
+  </main>
+  <section>
+    <div class="subject-section">
+      <h3>Matemática</h3>
+      <div>
+        <NuxtLink to="/math/fractions" class="math">
+          <p>Frações</p>
+        </NuxtLink>
+        <a href="/math/squareroot/index.html" class="math">
+          <p>Raiz quadrada</p>
+        </a>
+      </div>
+    </div>
+    <div class="subject-section">
+      <h3>Física</h3>
+      <div>
+        <a href="/physics/dilatation/index.html" class="physics">
+          <p>Dilatação</p>
+        </a>
+        <a href="/physics/mu/index.html" class="physics">
+          <p>Movimento uniforme</p>
+        </a>
+      </div>
+    </div>
+  </section>
 </template>
+
+<style scoped>
+main {
+  height: 75vh;
+
+  background-color: var(--dark-blue);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+main h1 {
+  font-family: "Lemon", serif;
+  color: var(--light-yellow);
+  font-size: 7em;
+}
+
+main h6 {
+  font-family: Itim, serif;
+  color: #ffffff;
+  font-size: 1.2em;
+  font-weight: 200;
+}
+
+section {
+  padding: 2vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+}
+
+.subject-section {
+  min-height: 25vh;
+
+  font-family: Itim, serif;
+
+  display: flex;
+  flex-direction: column;
+}
+
+section h3 {
+  font-size: 2em;
+  color: #005773;
+
+  margin-bottom: 12px;
+}
+
+.subject-section > div {
+  display: flex;
+
+  gap: 18px;
+}
+
+.subject-section > div > a {
+  text-decoration: none;
+  color: #004960;
+  font-size: 1.5em;
+
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 12px;
+
+  height: 5vh;
+
+  padding: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: rgba(0, 0, 0, 0.1) 5px 5px;
+
+  transition-duration: 0.2s;
+}
+
+.subject-section > div > a:hover {
+  transform: scale(1.1);
+  transition-duration: 0.2s;
+}
+
+.math {
+  border-color: #51bbfe;
+}
+
+.physics {
+  border-color: #f4e76e;
+}
+</style>
