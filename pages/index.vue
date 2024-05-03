@@ -20,18 +20,18 @@ useHead({
         <NuxtLink to="/math/fractions" class="math">
           <p>Frações</p>
         </NuxtLink>
-        <a href="/math/squareroot/index.html" class="math">
+        <NuxtLink to="/math/squareroot" class="math">
           <p>Raiz quadrada</p>
-        </a>
+        </NuxtLink>
       </div>
     </div>
     <div class="subject-section">
       <h3>Física</h3>
       <div>
-        <a href="/physics/dilatation/index.html" class="physics">
+        <NuxtLink to="/physics/dilatation" class="physics">
           <p>Dilatação</p>
-        </a>
-        <a href="/physics/mu/index.html" class="physics">
+        </NuxtLink>
+        <a href="/physics/mu" class="physics">
           <p>Movimento uniforme</p>
         </a>
       </div>

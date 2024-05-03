@@ -13,9 +13,10 @@
     "@types/three": "^0.164.0"
   },
   "dependencies": {
+    "katex": "^0.16.10",
     "nuxt": "^3.11.2",
+    "three": "^0.164.1",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "katex": "^0.16.10"
+    "vue-router": "^4.3.0"
   }
 }

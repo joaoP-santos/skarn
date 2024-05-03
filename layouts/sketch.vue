@@ -1,3 +1,13 @@
 <template>
-  <Body style="overflow-x: hidden; overflow-y: hidden"> <slot></slot></Body>
+  <Body :style="getBodyStyle"> <slot></slot></Body>
 </template>
+
+<script>
+export default {
+  computed: {
+    getBodyStyle() {
+      return "overflow-x: hidden; overflow-y: hidden";
+    },
+  },
+};
+</script>
