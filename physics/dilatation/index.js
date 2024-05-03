@@ -1,5 +1,7 @@
+//import * as THREE from "three/src/Three.js"
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js";
 
+import katex from "katex";
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -20,7 +22,6 @@ const material = new THREE.MeshPhongMaterial({
   color: 0x90ff00,
 });
 
-renderer.setClearColor(new THREE.Color().setHex(0xffffff));
 const initialCube = new THREE.Mesh(
   boxGeometry,
   new THREE.MeshPhongMaterial({
@@ -87,35 +88,62 @@ window.addEventListener("mousemove", (event) => {
     variationCube.rotation.x -= event.movementY * 0.007;
   }
 });
-initialCube.position.y = 2;
+initialCube.position.y = 3;
+variationCube.position.y = 3;
+cylinder.position.y = -3;
 
-variationCube.position.y = 2;
-cylinder.position.y = -2.5;
-
+camera.position.y = -2;
 camera.position.z = 10;
-
+camera.rotation.x = 0.3;
+console.log(camera);
 function animate() {
   requestAnimationFrame(animate);
-  const physicsData = {
-    temperature: inputs[0].value,
-    coefficient: Math.round(inputs[1].value * 100) / 10000,
-    initialVolume: inputs[2].value,
-  };
-  outputs.forEach((o, key) => {
-    o.innerHTML = `${Object.values(physicsData)[key]}`;
-  });
+  const temperature = inputs[0].value;
+  const coefficient = Math.round(inputs[1].value * 100) / 10000;
+  const initialVolume = inputs[2].value;
+  const volumeVariation =
+    Math.round(temperature * coefficient * initialVolume * 1000) / 1000;
 
+  renderer.setClearColor(
+    new THREE.Color(
+      `hsl(${temperature > 0 ? 0 : 180}, 100%, ${
+        100 - Math.abs(temperature) * 1.5
+      }%)`
+    )
+  );
+  outputs.forEach((o, key) => {
+    var sufix = "";
+    switch (key) {
+      case 0:
+        sufix = "°C";
+        break;
+      case 1:
+        sufix = "°C^{-1}";
+        break;
+      case 2:
+        sufix = "m^3";
+        break;
+      case 3:
+        sufix = "m^3";
+        break;
+    }
+    katex.render(
+      `${
+        [temperature, coefficient, initialVolume, volumeVariation][key]
+      } ${sufix}`,
+      o
+    );
+  });
   initialCube.scale.set(
-    physicsData.initialVolume / 50,
-    physicsData.initialVolume / 50,
-    physicsData.initialVolume / 50
+    initialVolume / 50,
+    initialVolume / 50,
+    initialVolume / 50
   );
 
-  const volumeVariation =
-    ((physicsData.temperature * 0.05 * physicsData.initialVolume) / 50) *
-    physicsData.coefficient;
+  const visualVolumeVariation =
+    ((temperature * 0.05 * initialVolume) / 50) * coefficient;
 
-  if (volumeVariation < 0) {
+  if (visualVolumeVariation < 0) {
     initialCube.material.opacity = 0.5;
     variationCube.material.opacity = 1;
   } else {
@@ -124,9 +152,9 @@ function animate() {
   }
 
   variationCube.scale.set(
-    initialCube.scale.x + volumeVariation,
-    initialCube.scale.y + volumeVariation,
-    initialCube.scale.z + volumeVariation
+    initialCube.scale.x + visualVolumeVariation,
+    initialCube.scale.y + visualVolumeVariation,
+    initialCube.scale.z + visualVolumeVariation
   );
 
   renderer.render(scene, camera);
