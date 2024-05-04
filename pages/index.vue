@@ -31,9 +31,6 @@ useHead({
         <NuxtLink to="/physics/dilatation" class="physics">
           <p>Dilatação</p>
         </NuxtLink>
-        <a href="/physics/mu" class="physics">
-          <p>Movimento uniforme</p>
-        </a>
       </div>
     </div>
   </section>
