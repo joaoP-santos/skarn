@@ -1,6 +1,8 @@
 <script setup>
 import * as THREE from "three";
+
 import katex from "katex";
+import { temp } from "three/examples/jsm/nodes/Nodes.js";
 
 definePageMeta({
   layout: "sketch",
@@ -18,6 +20,15 @@ useHead({
   ],
 });
 
+const temperatureModel = ref(0);
+const tempColor = computed(() => {
+  return new THREE.Color(
+    `hsl(${temperatureModel.value > 0 ? 0 : 180}, 100%, ${
+      100 - Math.abs(temperatureModel.value) * 1.5
+    }%)`
+  );
+});
+
 onMounted(() => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -30,13 +41,17 @@ onMounted(() => {
 
   renderer.setSize(innerWidth, innerHeight);
   renderer.setPixelRatio(devicePixelRatio);
+  renderer.setClearColor(0xfcffbe);
 
   document.body.appendChild(renderer.domElement);
 
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enablePan = false;
+  controls.enableDamping = true;
   const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
-  const cylinderGeometry = new THREE.CylinderGeometry(1.8, 2, 0.5);
+  const cylinderGeometry = new THREE.CylinderGeometry(1.8, 2, 1);
   const material = new THREE.MeshPhongMaterial({
-    color: 0x90ff00,
+    color: 0x035e7b,
   });
 
   const initialCube = new THREE.Mesh(
@@ -45,7 +60,6 @@ onMounted(() => {
       color: 0xffff00,
       transparent: true,
       opacity: 1,
-      depthTest: false,
       depthWrite: false,
     })
   );
@@ -55,19 +69,21 @@ onMounted(() => {
       color: 0x00ffff,
       transparent: true,
       opacity: 0.5,
-      depthTest: false,
       depthWrite: false,
     })
   );
   const cylinder = new THREE.Mesh(cylinderGeometry, material);
 
   const light = new THREE.HemisphereLight(0xffffff, 10);
-  light.position.set(0, 5, 10);
 
+  const cubes = new THREE.Group();
+  cubes.add(initialCube, variationCube);
+  cubes.renderOrder = 0;
   scene.add(light);
-  scene.add(initialCube);
-  scene.add(variationCube);
   scene.add(cylinder);
+  scene.add(variationCube);
+
+  scene.add(initialCube);
 
   const inputs = document.querySelectorAll("input");
   const outputs = document.querySelectorAll("strong");
@@ -93,25 +109,63 @@ onMounted(() => {
     mouseDown = false;
     inputDown = false;
   };
-  window.addEventListener("wheel", (event) => {
-    camera.position.z -= event.wheelDeltaY * 0.005;
-  });
 
-  window.addEventListener("mousemove", (event) => {
-    if (mouseDown && !inputDown) {
-      initialCube.rotation.y -= event.movementX * 0.007;
-      initialCube.rotation.x -= event.movementY * 0.007;
-      variationCube.rotation.y -= event.movementX * 0.007;
-      variationCube.rotation.x -= event.movementY * 0.007;
-    }
-  });
-  initialCube.position.y = 3;
-  variationCube.position.y = 3;
-  cylinder.position.y = -3;
+  initialCube.position.y = 2;
+  variationCube.position.y = 2;
+  cylinder.position.y = -5;
 
   camera.position.y = -2;
   camera.position.z = 10;
   camera.rotation.x = 0.3;
+  class Spark {
+    x;
+    y;
+    z;
+    radius;
+    dx;
+    dy;
+    dz;
+    Object3D;
+    dead = false;
+    constructor() {
+      this.x = cylinder.position.x + 0.9 - Math.random() * 1.8;
+      this.y = cylinder.position.y;
+      this.z = cylinder.position.z + 0.9 - Math.random() * 1.8;
+      this.dx = Math.random() * 0.01 - 0.005;
+      this.dy = Math.random() * 0.05 + 0.1;
+      this.dz = Math.random() * 0.01 - 0.005;
+      this.radius = Math.random() * 0.1 + 0.2;
+      this.Object3D = new THREE.Mesh(
+        new THREE.SphereGeometry(this.radius),
+        new THREE.MeshPhongMaterial({ color: tempColor.value })
+      );
+      scene.add(this.Object3D);
+      setTimeout(() => {
+        scene.remove(this.Object3D);
+        this.Object3D.geometry.dispose();
+        this.Object3D.material.dispose();
+        this.dead = true;
+      }, 2000);
+    }
+
+    render() {
+      (this.x += this.dx), (this.y += this.dy), (this.z += this.dz);
+      this.Object3D.position.set(this.x, this.y, this.z);
+    }
+  }
+  var sparks = [];
+  function loop() {
+    setTimeout(() => {
+      if (temperatureModel.value == 0) {
+        loop();
+        return;
+      }
+      const spark = new Spark();
+      sparks.push(spark);
+      loop();
+    }, 1000 - Math.abs(temperatureModel.value) * 30);
+  }
+  loop();
   function animate() {
     requestAnimationFrame(animate);
     const temperature = inputs[0].value;
@@ -120,13 +174,10 @@ onMounted(() => {
     const volumeVariation =
       Math.round(temperature * coefficient * initialVolume * 1000) / 1000;
 
-    renderer.setClearColor(
-      new THREE.Color(
-        `hsl(${temperature > 0 ? 0 : 180}, 100%, ${
-          100 - Math.abs(temperature) * 1.5
-        }%)`
-      )
-    );
+    sparks = sparks.filter((spark) => !spark.dead);
+    sparks.forEach((spark) => {
+      spark.render();
+    });
     outputs.forEach((o, key) => {
       var sufix = "";
       switch (key) {
@@ -143,7 +194,7 @@ onMounted(() => {
           sufix = "m^3";
           break;
       }
-      var output = katex.render(
+      katex.render(
         `${
           [temperature, coefficient, initialVolume, volumeVariation][key]
         } ${sufix}`,
@@ -173,14 +224,13 @@ onMounted(() => {
       initialCube.scale.z + visualVolumeVariation
     );
 
-    renderer.render(scene, camera);
     if (!mouseDown || inputDown) {
       initialCube.rotation.y -= 0.005;
-      initialCube.rotation.x -= 0.005;
       variationCube.rotation.y -= 0.005;
-      variationCube.rotation.x -= 0.005;
     }
-    cancelAnimationFrame(animate);
+
+    controls.update();
+    renderer.render(scene, camera);
   }
 
   animate();
@@ -193,7 +243,13 @@ onMounted(() => {
         Variação de temperatura:
         <strong></strong>
       </p>
-      <input min="-30" max="30" type="range" name="temperature" />
+      <input
+        v-model="temperatureModel"
+        min="-30"
+        max="30"
+        type="range"
+        name="temperature"
+      />
     </div>
     <div>
       <p>Coeficiente de dilatação: <strong></strong></p>
