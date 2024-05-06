@@ -2,7 +2,6 @@
 import * as THREE from "three";
 
 import katex from "katex";
-import { temp } from "three/examples/jsm/nodes/Nodes.js";
 
 definePageMeta({
   layout: "sketch",
@@ -234,6 +233,10 @@ onMounted(() => {
   }
 
   animate();
+});
+onBeforeRouteLeave((to, from, next) => {
+  document.body.removeChild(renderer.domElement);
+  next();
 });
 </script>
 <template>

@@ -2,12 +2,6 @@
   <Body :style="getBodyStyle"> <slot></slot></Body>
 </template>
 
-<script>
-export default {
-  computed: {
-    getBodyStyle() {
-      return "overflow-x: hidden; overflow-y: hidden";
-    },
-  },
-};
+<script setup>
+const getBodyStyle = computed(() => "overflow-x: hidden; overflow-y: hidden");
 </script>
