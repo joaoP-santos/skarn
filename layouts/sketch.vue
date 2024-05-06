@@ -1,7 +1,5 @@
 <template>
-  <Body :style="getBodyStyle"> <slot></slot></Body>
+  <Body style="overflow-x: hidden; overflow-y: hidden"> <slot></slot></Body>
 </template>
 
-<script setup>
-const getBodyStyle = computed(() => "overflow-x: hidden; overflow-y: hidden");
-</script>
+<script setup></script>
