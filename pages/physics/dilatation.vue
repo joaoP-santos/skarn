@@ -27,7 +27,6 @@ const tempColor = computed(() => {
     }%)`
   );
 });
-
 onMounted(() => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -42,8 +41,8 @@ onMounted(() => {
   renderer.setPixelRatio(devicePixelRatio);
   renderer.setClearColor(0xfcffbe);
 
-  document.body.appendChild(renderer.domElement);
-
+  const canvasContainer = document.querySelector("div#canvas");
+  canvasContainer.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
   controls.enableDamping = true;
@@ -234,10 +233,6 @@ onMounted(() => {
 
   animate();
 });
-onBeforeRouteLeave((to, from, next) => {
-  document.body.removeChild(renderer.domElement);
-  next();
-});
 </script>
 <template>
   <div id="inputs">
@@ -266,6 +261,7 @@ onBeforeRouteLeave((to, from, next) => {
       <p>Variação de volume: <strong></strong></p>
     </div>
   </div>
+  <div id="canvas"></div>
 </template>
 <style scoped>
 div#inputs {
