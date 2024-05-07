@@ -31,6 +31,9 @@ useHead({
         <NuxtLink to="/physics/dilatation" class="physics">
           <p>Dilatação</p>
         </NuxtLink>
+        <NuxtLink to="/physics/thermo-scales" class="physics">
+          <p>Escalas termométricas</p>
+        </NuxtLink>
       </div>
     </div>
   </section>
