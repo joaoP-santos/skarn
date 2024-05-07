@@ -99,9 +99,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
+div {
+  max-width: 30vw;
+  max-height: 30vh;
+}
+
 strong {
   font-family: var(--itim);
-  font-size: 1.5em;
+  font-size: calc(1em + 0.5vw);
   color: var(--dark-blue);
 }
 

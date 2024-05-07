@@ -23,7 +23,7 @@ onMounted(() => {
       side = sideInput.value;
       sideText.innerHTML = "Comprimento do lado: " + side;
       if (innerHeight > innerWidth) {
-        rectLength = (side * innerHeight) / 50;
+        rectLength = (side * innerHeight) / 60;
       } else {
         rectLength = (side * innerWidth) / 90;
       }
@@ -96,7 +96,7 @@ onMounted(() => {
     c.fillText(
       `Área total: ${Math.pow(side, 2)}`,
       innerWidth / 2,
-      rectY + rectLength + 50
+      rectY + rectLength + 0.1 * innerHeight
     );
   }
 
@@ -116,12 +116,15 @@ div {
   position: absolute;
   display: block;
   padding: 30px;
+  max-width: 30vw;
+  min-width: 220px;
+  max-height: 30vh;
 }
 
 p {
   color: var(--dark-blue);
   font-weight: bolder;
-  font-size: xx-large;
+  font-size: calc(1em + 0.5vw);
   font-family: var(--itim);
 }
 

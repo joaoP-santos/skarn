@@ -38,14 +38,23 @@ onMounted(() => {
   const renderer = new THREE.WebGLRenderer();
 
   renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(devicePixelRatio);
+  renderer.setPixelRatio(devicePixelRatio * 1.5);
   renderer.setClearColor(0xfcffbe);
+  addEventListener("resize", () => {
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(devicePixelRatio * 1.5);
+    renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+  });
   const canvasContainer = document.querySelector("div#canvas");
   canvasContainer.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
   controls.enableDamping = true;
+  controls.minDistance = 5;
+  controls.maxDistance = 20;
   const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
   const cylinderGeometry = new THREE.CylinderGeometry(1.8, 2, 1);
   const material = new THREE.MeshPhongMaterial({
@@ -269,29 +278,30 @@ div#inputs {
   display: flex;
   flex-direction: column;
 
-  width: 30vw;
+  max-width: 30vw;
 
-  padding: 20px;
-  gap: 10px;
+  padding: 10px;
 }
 
-div#inputs div {
+div#inputs div:nth-child(2) {
+  border-top: 1px solid var(--dark-blue);
+}
+
+div#inputs div:nth-child(n + 2):nth-child(-n + 3) {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 
   box-sizing: border-box;
+  border-bottom: 1px solid var(--dark-blue);
+}
 
-  gap: 40px;
+div#inputs div {
+  padding: 10px 0;
 }
 
 p {
   font-family: var(--itim);
-  font-size: 1.25em;
-}
-
-span.katex {
-  font-size: 2em;
-  font-family: var(--itim);
+  font-size: calc(1em + 0.5vw);
 }
 </style>
