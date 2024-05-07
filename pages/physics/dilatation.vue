@@ -280,7 +280,7 @@ div#inputs {
 
   max-width: 30vw;
 
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }
 
 div#inputs div:nth-child(2) {
@@ -297,11 +297,15 @@ div#inputs div:nth-child(n + 2):nth-child(-n + 3) {
 }
 
 div#inputs div {
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 p {
   font-family: var(--itim);
-  font-size: calc(1em + 0.5vw);
+  font-size: calc(0.75em + 0.5vw);
+}
+
+input {
+  width: 100%;
 }
 </style>
