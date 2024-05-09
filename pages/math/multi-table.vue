@@ -24,8 +24,8 @@ function resizeWindow() {
 }
 
 function generatePhase() {
-  nums[0] = Math.round(Math.random() * 9) + 1;
-  nums[1] = Math.round(Math.random() * 9) + 1;
+  nums[0] = Math.round(Math.random() * 10);
+  nums[1] = Math.round(Math.random() * 10);
   nums[2] = nums[0] * nums[1];
   hiddenKey = Math.round(Math.random() * 2);
   hidden = nums[hiddenKey];
@@ -214,7 +214,7 @@ onMounted(() => {
     c.fillStyle = "#fcffbe";
     c.fillRect(0, 0, innerWidth, innerHeight);
 
-    nums[hiddenKey] = answer.value == 0 ? "?" : answer.value;
+    nums[hiddenKey] = answer.value == "" ? "?" : answer.value;
 
     c.fillStyle = "#035E7B";
     c.font = `bold ${0.2 * innerHeight}px Itim`;
