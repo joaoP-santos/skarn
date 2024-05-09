@@ -26,6 +26,9 @@ useHead({
         <NuxtLink to="/math/multi-table" class="math">
           <p>Tabuada</p>
         </NuxtLink>
+        <NuxtLink to="/math/unit-circle" class="math">
+          <p>Círculo unitário</p>
+        </NuxtLink>
       </div>
     </div>
     <div class="subject-section">
