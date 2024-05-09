@@ -23,6 +23,9 @@ useHead({
         <NuxtLink to="/math/squareroot" class="math">
           <p>Raiz quadrada</p>
         </NuxtLink>
+        <NuxtLink to="/math/multi-table" class="math">
+          <p>Tabuada</p>
+        </NuxtLink>
       </div>
     </div>
     <div class="subject-section">
