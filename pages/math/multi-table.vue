@@ -8,7 +8,7 @@ useHead({
 });
 
 const canvas = ref(null);
-const answer = ref(0);
+const answer = ref("");
 const buttonMessage = ref("Verificar");
 
 var nums = [0, 0, 0];
@@ -24,8 +24,8 @@ function resizeWindow() {
 }
 
 function generatePhase() {
-  nums[0] = Math.round(Math.random() * 8) + 2;
-  nums[1] = Math.round(Math.random() * 8) + 2;
+  nums[0] = Math.round(Math.random() * 9) + 1;
+  nums[1] = Math.round(Math.random() * 9) + 1;
   nums[2] = nums[0] * nums[1];
   hiddenKey = Math.round(Math.random() * 2);
   hidden = nums[hiddenKey];
@@ -36,7 +36,7 @@ function buttonPress() {
   if (buttonMessage.value == "Próximo") {
     generatePhase();
     displayResult = "";
-    answer.value = 0;
+    answer.value = "";
     buttonMessage.value = "Verificar";
     return;
   }
@@ -48,19 +48,32 @@ function answerChanged() {
   displayResult = "";
 }
 class Button {
-  constructor(x, y, width, height, num, col, row) {
+  constructor(x, y, width, height, content, col, row, type) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.num = num;
+    this.content = content;
     this.col = col;
     this.row = row;
+    this.type = type;
   }
   resize() {
-    this.x = innerWidth * 0.6 + this.col * innerWidth * 0.065;
+    switch (this.type) {
+      case "del":
+        this.width = innerWidth * 0.05 + innerWidth * 0.065;
+        break;
+
+      case "num":
+        this.width = innerWidth * 0.05;
+        break;
+
+      case "verify":
+        this.width = 2 * innerWidth * 0.065 + innerWidth * 0.05;
+        break;
+    }
+    this.x = innerWidth * 0.7 + this.col * innerWidth * 0.065;
     this.y = innerHeight * 0.3 + this.row * innerWidth * 0.065;
-    this.width = innerWidth * 0.05;
     this.height = innerWidth * 0.05;
   }
   checkHover(x, y) {
@@ -91,7 +104,13 @@ class Button {
     c.font = `bold ${0.03 * innerWidth}px Itim`;
     c.textAlign = "center";
     c.fillStyle = this.hover ? "#fcffbe" : "#035E7B";
-    c.fillText(this.num, this.x + this.width / 2, this.y + this.width * 0.71);
+    c.fillText(
+      this.type == "verify" ? this.content.value : this.content,
+      this.x + this.width / 2,
+      this.type == "num"
+        ? this.y + this.width * 0.71
+        : this.y + this.height / 2 + 0.009 * innerWidth
+    );
   }
 }
 
@@ -101,10 +120,28 @@ const buttonsEvents = {
       button.checkHover(e.clientX, e.clientY);
     });
   },
-  click: (e) => {
+  click: () => {
     buttons.forEach((button) => {
-      if (button.hover) answer.value = button.num;
+      if (button.hover) {
+        answerChanged();
+
+        switch (button.type) {
+          case "num":
+            if (answer.value.length < 3)
+              answer.value = `${answer.value ? answer.value : ""}${
+                button.content
+              }`;
+            break;
+          case "del":
+            if (answer.value.length >= 0)
+              answer.value = answer.value.slice(0, -1);
+            break;
+          case "verify":
+            buttonPress();
+        }
+      }
     });
+    console.log(answer.value);
   },
 };
 
@@ -114,28 +151,61 @@ onMounted(() => {
   generatePhase();
 
   window.addEventListener("mousemove", (e) => buttonsEvents.move(e));
-  window.addEventListener("click", (e) => buttonsEvents.click(e));
+  window.addEventListener("click", (e) => buttonsEvents.click());
 
+  buttons.push(
+    new Button(
+      innerWidth * 0.7,
+      innerHeight * 0.3 - innerWidth * 0.065,
+      innerWidth * 0.05,
+      innerWidth * 0.05,
+      "0",
+      0,
+      -1,
+      "num"
+    )
+  );
+  buttons.push(
+    new Button(
+      innerWidth * 0.7 + innerWidth * 0.065,
+      innerHeight * 0.3 - innerWidth * 0.065,
+      innerWidth * 0.05 + innerWidth * 0.065,
+      innerWidth * 0.05,
+      "DEL",
+      1,
+      -1,
+      "del"
+    )
+  );
   for (var row = 0; row < 3; row++) {
     for (var col = 0; col < 3; col++) {
       buttons.push(
         new Button(
-          innerWidth * 0.6 + col * innerWidth * 0.065,
+          innerWidth * 0.7 + col * innerWidth * 0.065,
           innerHeight * 0.3 + row * innerWidth * 0.065,
-          innerHeight * 0.1,
-          innerHeight * 0.1,
-          buttons.length + 2,
+          innerWidth * 0.05,
+          innerWidth * 0.05,
+          buttons.length - 1,
           col,
-          row
+          row,
+          "num"
         )
       );
     }
   }
 
-  const verifyButton = {
-    x: innerWidth * 0.6,
-    y: innerHeight * 0.8,
-  };
+  buttons.push(
+    new Button(
+      innerWidth * 0.7,
+      innerHeight * 0.3 + 3 * innerWidth * 0.065,
+      2 * innerWidth * 0.065 + innerWidth * 0.05,
+      innerWidth * 0.05,
+      computed(() => buttonMessage.value),
+      0,
+      3,
+      "verify"
+    )
+  );
 
   console.log(buttons);
   const c = canvas.value.getContext("2d");
@@ -156,7 +226,7 @@ onMounted(() => {
     );
 
     if (displayResult) {
-      c.fillStyle = answer.value == hidden ? "#8FF7A7" : "#035E7B!";
+      c.fillStyle = answer.value == hidden ? "#51BBFE" : "#035E7B!";
       c.font = `bold ${0.1 * innerHeight}px Itim`;
       c.fillText(displayResult, innerWidth * 0.3, innerHeight * 0.6);
     }
@@ -170,9 +240,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <button @click="buttonPress">{{ buttonMessage }}</button>
-  </div>
   <canvas ref="canvas"></canvas>
 </template>
 <style scoped>
