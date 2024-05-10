@@ -24,6 +24,10 @@ useHead({
       href: "https://fonts.googleapis.com/css2?family=Itim&family=Lemon&display=swap",
       rel: "stylesheet",
     },
+    {
+      href: "https://fonts.googleapis.com/css2?family=Fredoka:wdth,wght@75..125,300..700&display=swap",
+      rel: "stylesheet",
+    },
   ],
 });
 </script>
