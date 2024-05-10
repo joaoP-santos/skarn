@@ -61,6 +61,7 @@ main h1 {
   font-family: "Lemon", serif;
   color: var(--light-yellow);
   font-size: 7em;
+  font-weight: 300;
 }
 
 main h6 {
