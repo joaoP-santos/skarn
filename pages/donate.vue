@@ -63,8 +63,6 @@ div#text strong {
 }
 
 h1 {
-  font-family: var(--fred);
-  font-size: 4em;
   color: white;
 }
 

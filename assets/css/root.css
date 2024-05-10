@@ -1,8 +1,14 @@
 :root {
     --dark-blue: #035e7b;
+    --darkest-blue: #001B24;
     --light-yellow: #FCFFBE;
     --darker-yellow: #F4E76E;
     --lemon: "Lemon", sans-serif;
     --itim: "Itim", serif;
     --fred: "Fredoka", sans-serif;
+}
+
+h1 {
+    font-family: var(--fred);
+    font-size: 4em;
 }
