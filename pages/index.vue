@@ -40,6 +40,9 @@ useHead({
         <NuxtLink to="/physics/thermo-scales" class="physics">
           <p>Escalas termométricas</p>
         </NuxtLink>
+        <NuxtLink to="/physics/newton-f" class="physics">
+          <p>1ª Lei de Newton</p>
+        </NuxtLink>
       </div>
     </div>
   </section>
