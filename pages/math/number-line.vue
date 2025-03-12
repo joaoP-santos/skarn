@@ -23,6 +23,9 @@ const animationProgress = ref(0);
 const animationSpeed = 0.02; // Animation speed (0-1)
 const showSelectedNumber = ref(false); // Flag to show selected number after submission
 
+// Add lives system
+const lives = ref(3);
+
 // Format numbers without trailing zeros
 const formatNumber = (num) => {
   return Number(parseFloat(num).toFixed(3)).toString();
@@ -113,12 +116,18 @@ function submitAnswer() {
     resultMessage.value = "Correto!";
     score.value += 1;
   } else {
-    resultMessage.value = `Incorreto! O número correto era ${formatNumber(
-      targetNumber.value
-    )}`;
+    lives.value -= 1;
+    if (lives.value <= 0) {
+      resultMessage.value = `Game Over! Sua pontuação final: ${score.value}`;
+      lives.value = 3;
+      score.value = 0;
+    } else {
+      resultMessage.value = `Incorreto! O número correto era ${formatNumber(
+        targetNumber.value
+      )}`;
+    }
   }
 
-  // Start animation
   animateArrow();
 }
 
@@ -249,6 +258,18 @@ onMounted(() => {
       innerWidth * 0.85,
       innerHeight * 0.08
     );
+
+    // Draw lives
+    c.font = `bold ${0.03 * innerHeight}px Itim`;
+    c.fillStyle = "#035E7B";
+    const heartSize = innerHeight * 0.03;
+    for (let i = 0; i < lives.value; i++) {
+      c.fillText(
+        "❤️",
+        innerWidth * 0.5 + heartSize * 2 * (i - 1),
+        innerHeight * 0.1
+      );
+    }
 
     // Modified arrow drawing code with length indicator
     if (gameState.value === "checking" || gameState.value === "result") {
