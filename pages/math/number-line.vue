@@ -21,6 +21,7 @@ const score = ref(0);
 // Animation properties
 const animationProgress = ref(0);
 const animationSpeed = 0.02; // Animation speed (0-1)
+const showSelectedNumber = ref(false); // Flag to show selected number after submission
 
 // Format numbers without trailing zeros
 const formatNumber = (num) => {
@@ -106,6 +107,7 @@ function submitAnswer() {
 
   gameState.value = "checking";
   const isCorrect = selectedPoint.value === targetNumber.value;
+  showSelectedNumber.value = true;
 
   if (isCorrect) {
     resultMessage.value = "Correto!";
@@ -142,6 +144,7 @@ function animateArrow() {
 
 function nextRound() {
   generateGame();
+  showSelectedNumber.value = false;
 }
 
 function handlePointClick(e) {
@@ -206,11 +209,27 @@ onMounted(() => {
     points.value.forEach((point) => {
       const pointX = innerWidth * 0.1 + (point / 10) * (innerWidth * 0.8);
       const isSelected = point === selectedPoint.value;
+      const isCorrect = selectedPoint.value === targetNumber.value;
 
       c.beginPath();
-      c.arc(pointX, innerHeight / 2 - 40, 7, 0, Math.PI * 2); // Slightly smaller
+      c.arc(pointX, innerHeight / 2 - 40, 7, 0, Math.PI * 2);
       c.fillStyle = isSelected ? "#51BBFE" : "#035E7B";
       c.fill();
+
+      // Show selected number above the point after submission
+      if (showSelectedNumber.value && isSelected) {
+        c.font = `bold ${0.04 * innerHeight}px Itim`;
+        c.textAlign = "center";
+        c.fillStyle = isCorrect ? "#4CAF50" : "#F44336"; // Fixed color logic
+        c.fillText(formatNumber(point), pointX, innerHeight / 2 - 60);
+
+        // Highlight the point with matching color
+        c.beginPath();
+        c.arc(pointX, innerHeight / 2 - 40, 10, 0, Math.PI * 2);
+        c.strokeStyle = isCorrect ? "#4CAF50" : "#F44336"; // Fixed color logic
+        c.lineWidth = 3;
+        c.stroke();
+      }
     });
 
     // Draw target prompt
@@ -264,6 +283,17 @@ onMounted(() => {
         // Calculate current value based on progress and format it properly
         const currentValue = targetNumber.value * animationProgress.value;
         c.fillText(formatNumber(currentValue), progressX, innerHeight / 2 + 65);
+      }
+
+      // When animation completes, highlight the correct target point
+      if (animationProgress.value >= 0.99) {
+        const targetX =
+          innerWidth * 0.1 + (targetNumber.value / 10) * (innerWidth * 0.8);
+        c.beginPath();
+        c.arc(targetX, innerHeight / 2 - 40, 10, 0, Math.PI * 2);
+        c.strokeStyle = "#4CAF50"; // Green for the correct target
+        c.lineWidth = 3;
+        c.stroke();
       }
     }
 
