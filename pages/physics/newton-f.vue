@@ -167,6 +167,9 @@ onMounted(() => {
 </template>
 
 <style>
+* {
+  font-family: Itim, sans-serif;
+}
 div#controls {
   position: absolute;
   top: 20px;
@@ -190,7 +193,6 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  font-family: Arial, sans-serif;
   display: flex;
   flex: 1;
   width: 100%;

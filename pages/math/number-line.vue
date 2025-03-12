@@ -5,24 +5,165 @@ definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Números inteiros",
+  title: "Jogo da Reta Numérica",
 });
 
 const canvas = ref(null);
-const numberInput = ref(0);
-const isRational = ref(false);
 
-const inputStep = computed(() => (isRational.value ? 0.1 : 1));
-const formatNumber = (num) => (isRational.value ? Number(num).toFixed(1) : num);
+// Game state
+const gameState = ref("waiting"); // waiting, checking, result
+const targetNumber = ref(0);
+const points = ref([]);
+const selectedPoint = ref(null);
+const resultMessage = ref("");
+const score = ref(0);
+
+// Animation properties
+const animationProgress = ref(0);
+const animationSpeed = 0.02; // Animation speed (0-1)
+
+// Format numbers without trailing zeros
+const formatNumber = (num) => {
+  return Number(parseFloat(num).toFixed(3)).toString();
+};
 
 function resizeWindow() {
   canvas.value.width = innerWidth;
   canvas.value.height = innerHeight;
 }
 
+function generateGame() {
+  // Generate a new target number (only positive) with up to 3 decimal places
+  const precision = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3 decimal places
+  const multiplier = Math.pow(10, precision);
+  targetNumber.value = Math.round(Math.random() * 10 * multiplier) / multiplier;
+
+  // Ensure proper formatting for target number
+  targetNumber.value = parseFloat(targetNumber.value.toFixed(precision));
+
+  // Generate points with minimum spacing
+  const newPoints = [targetNumber.value];
+  const numPoints = 10; // Total points to display
+  const minDistance = 0.2; // Minimum distance between points
+
+  let attempts = 0;
+  while (newPoints.length < numPoints && attempts < 100) {
+    attempts++;
+
+    // Generate potential new point
+    const precision = Math.floor(Math.random() * 3) + 1;
+    const multiplier = Math.pow(10, precision);
+    let randomPoint = Math.round(Math.random() * 10 * multiplier) / multiplier;
+    randomPoint = parseFloat(randomPoint.toFixed(precision)); // Fix precision
+
+    // Check if this point is far enough from all existing points
+    const isFarEnough = newPoints.every(
+      (point) => Math.abs(point - randomPoint) >= minDistance
+    );
+
+    // Make sure we don't add duplicates and points are far enough apart
+    if (
+      isFarEnough &&
+      !newPoints.includes(randomPoint) &&
+      randomPoint <= 10 &&
+      randomPoint >= 0
+    ) {
+      newPoints.push(randomPoint);
+    }
+  }
+
+  // If we couldn't get enough points with spacing, fill with evenly distributed points
+  if (newPoints.length < numPoints) {
+    const existingPositions = new Set(newPoints.map((p) => Math.round(p * 10)));
+    for (let i = 0; newPoints.length < numPoints; i++) {
+      const position = i % 101; // 0-100 positions (0-10 with 0.1 increment)
+      if (!existingPositions.has(position)) {
+        const newPoint = position / 10;
+        newPoints.push(newPoint);
+        existingPositions.add(position);
+      }
+    }
+  }
+
+  // Shuffle the points array
+  points.value = newPoints.sort(() => Math.random() - 0.5);
+
+  // Reset game state
+  selectedPoint.value = null;
+  gameState.value = "waiting";
+  resultMessage.value = "";
+  animationProgress.value = 0;
+}
+
+function selectPoint(point) {
+  if (gameState.value === "waiting") {
+    selectedPoint.value = point;
+  }
+}
+
+function submitAnswer() {
+  if (selectedPoint.value === null || gameState.value !== "waiting") return;
+
+  gameState.value = "checking";
+  const isCorrect = selectedPoint.value === targetNumber.value;
+
+  if (isCorrect) {
+    resultMessage.value = "Correto!";
+    score.value += 1;
+  } else {
+    resultMessage.value = `Incorreto! O número correto era ${formatNumber(
+      targetNumber.value
+    )}`;
+  }
+
+  // Start animation
+  animateArrow();
+}
+
+function animateArrow() {
+  animationProgress.value = 0;
+
+  function step() {
+    animationProgress.value += animationSpeed;
+
+    if (animationProgress.value < 1) {
+      requestAnimationFrame(step);
+    } else {
+      // Animation finished
+      animationProgress.value = 1;
+      setTimeout(() => {
+        gameState.value = "result";
+      }, 500);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+function nextRound() {
+  generateGame();
+}
+
+function handlePointClick(e) {
+  if (gameState.value !== "waiting") return;
+
+  const rect = canvas.value.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const ratio = (x - innerWidth * 0.1) / (innerWidth * 0.8);
+
+  if (ratio >= 0 && ratio <= 1) {
+    const clickValue = ratio * 10;
+    const closest = points.value.reduce((prev, curr) =>
+      Math.abs(curr - clickValue) < Math.abs(prev - clickValue) ? curr : prev
+    );
+    selectPoint(closest);
+  }
+}
+
 onMounted(() => {
   addEventListener("resize", resizeWindow);
   resizeWindow();
+  generateGame();
 
   function animate() {
     requestAnimationFrame(animate);
@@ -44,10 +185,11 @@ onMounted(() => {
     c.font = `bold ${0.03 * innerHeight}px Itim`;
     c.textAlign = "center";
     const range = 10;
-    const spacing = (innerWidth * 0.8) / (range * 2);
+    const spacing = (innerWidth * 0.8) / range; // Modified to show only 0-10 range
 
-    for (let i = -range; i <= range; i++) {
-      const x = innerWidth / 2 + i * spacing;
+    for (let i = 0; i <= range; i++) {
+      // Changed to start from 0 instead of -range
+      const x = innerWidth * 0.1 + i * spacing;
 
       // Draw tick
       c.beginPath();
@@ -60,37 +202,79 @@ onMounted(() => {
       c.fillText(i, x, innerHeight / 2 + 35);
     }
 
-    // Draw pointer at selected number
-    const pointerX = innerWidth / 2 + numberInput.value * spacing;
+    // Draw points for selection (modified to be smaller and spaced)
+    points.value.forEach((point) => {
+      const pointX = innerWidth * 0.1 + (point / 10) * (innerWidth * 0.8);
+      const isSelected = point === selectedPoint.value;
 
-    // Draw arrow
-    c.beginPath();
-    c.moveTo(pointerX, innerHeight / 2 - 40);
-    c.lineTo(pointerX - 15, innerHeight / 2 - 60);
-    c.lineTo(pointerX + 15, innerHeight / 2 - 60);
-    c.closePath();
-    c.fillStyle = "#035E7B";
-    c.fill();
+      c.beginPath();
+      c.arc(pointX, innerHeight / 2 - 40, 7, 0, Math.PI * 2); // Slightly smaller
+      c.fillStyle = isSelected ? "#51BBFE" : "#035E7B";
+      c.fill();
+    });
 
-    // Show selected number properties
+    // Draw target prompt
     c.font = `bold ${0.05 * innerHeight}px Itim`;
     c.fillStyle = "#035E7B";
+    c.textAlign = "center";
+    c.fillText(
+      `Encontre o número: ${formatNumber(targetNumber.value)}`,
+      innerWidth / 2,
+      innerHeight * 0.15
+    );
 
-    const properties = [
-      `Número selecionado: ${formatNumber(numberInput.value)}`,
-      `Tipo: ${
-        numberInput.value > 0
-          ? "Positivo"
-          : numberInput.value < 0
-          ? "Negativo"
-          : "Zero"
-      }`,
-      `Distância até zero: ${formatNumber(Math.abs(numberInput.value))}`,
-    ];
+    // Draw score
+    c.font = `bold ${0.03 * innerHeight}px Itim`;
+    c.fillText(
+      `Pontuação: ${score.value}`,
+      innerWidth * 0.85,
+      innerHeight * 0.08
+    );
 
-    properties.forEach((text, index) => {
-      c.fillText(text, innerWidth / 2, innerHeight * 0.2 + index * 40);
-    });
+    // Modified arrow drawing code with length indicator
+    if (gameState.value === "checking" || gameState.value === "result") {
+      const startX = innerWidth * 0.1;
+      const targetX = startX + (targetNumber.value / 10) * (innerWidth * 0.8);
+      const progressX = startX + animationProgress.value * (targetX - startX);
+      const currentLength = progressX - startX;
+
+      // Draw arrow shaft
+      c.beginPath();
+      c.moveTo(startX, innerHeight / 2 + 40);
+      c.lineTo(progressX - 15, innerHeight / 2 + 40); // Stop before the arrowhead
+      c.strokeStyle = "#51BBFE";
+      c.lineWidth = 5;
+      c.stroke();
+
+      // Draw arrowhead
+      if (animationProgress.value > 0.05) {
+        c.beginPath();
+        c.moveTo(progressX, innerHeight / 2 + 40);
+        c.lineTo(progressX - 15, innerHeight / 2 + 30);
+        c.lineTo(progressX - 15, innerHeight / 2 + 50);
+        c.closePath();
+        c.fillStyle = "#51BBFE";
+        c.fill();
+
+        // Show length at the tip of the arrow with proper formatting
+        c.font = `bold ${0.03 * innerHeight}px Itim`;
+        c.textAlign = "center";
+        c.fillStyle = "#035E7B";
+
+        // Calculate current value based on progress and format it properly
+        const currentValue = targetNumber.value * animationProgress.value;
+        c.fillText(formatNumber(currentValue), progressX, innerHeight / 2 + 65);
+      }
+    }
+
+    // Draw result message
+    if (gameState.value === "checking" || gameState.value === "result") {
+      c.font = `bold ${0.05 * innerHeight}px Itim`;
+      c.fillStyle = resultMessage.value.includes("Correto")
+        ? "#4CAF50"
+        : "#F44336";
+      c.fillText(resultMessage.value, innerWidth / 2, innerHeight * 0.8);
+    }
   }
   animate();
 });
@@ -99,49 +283,63 @@ onMounted(() => {
 <template>
   <div id="inputs">
     <div class="input-group">
-      <strong>Selecione um número:</strong>
-      <input
-        v-model="numberInput"
-        type="range"
-        min="-10"
-        max="10"
-        :step="inputStep"
-      />
-    </div>
-    <div class="input-group">
-      <strong>Tipo de número:</strong>
-      <label class="toggle">
-        <input type="checkbox" v-model="isRational" />
-        <span>{{ isRational ? "Racionais" : "Inteiros" }}</span>
-      </label>
+      <strong>{{
+        gameState === "waiting"
+          ? "Clique em um ponto na reta"
+          : "Veja o resultado"
+      }}</strong>
+
+      <div class="button-container">
+        <button
+          v-if="gameState === 'waiting'"
+          @click="submitAnswer"
+          :disabled="selectedPoint === null"
+          class="action-button"
+        >
+          Confirmar
+        </button>
+
+        <button
+          v-if="gameState === 'result'"
+          @click="nextRound"
+          class="action-button"
+        >
+          Próxima Rodada
+        </button>
+      </div>
     </div>
   </div>
+
+  <!-- Click overlay -->
+  <div
+    v-if="gameState === 'waiting'"
+    class="click-overlay"
+    @click="handlePointClick"
+  ></div>
+
   <canvas ref="canvas"></canvas>
 </template>
 
 <style scoped>
 div#inputs {
   position: absolute;
-  padding: 30px;
+  padding: 20px;
   max-width: 30vw;
   min-width: 220px;
-  max-height: 30vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
 strong {
   color: var(--dark-blue);
   font-weight: bolder;
-  font-size: calc(1em + 0.5vw);
+  font-size: calc(1em + 0.3vw);
   font-family: var(--itim);
-}
-
-input {
-  width: 100%;
-  accent-color: var(--dark-blue);
-}
-
-input::-webkit-slider-thumb {
-  background-color: var(--dark-blue);
+  display: block;
+  margin-bottom: 10px;
 }
 
 .input-group {
@@ -163,6 +361,43 @@ input::-webkit-slider-thumb {
 }
 
 .toggle span {
-  font-size: calc(0.8em + 0.5vw);
+  font-size: calc(0.8em + 0.3vw);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.action-button {
+  padding: 10px 20px;
+  background-color: var(--dark-blue);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-family: var(--itim);
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: var(--darkest-blue);
+}
+
+.action-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.click-overlay {
+  position: fixed; /* Changed from absolute to fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 5;
 }
 </style>

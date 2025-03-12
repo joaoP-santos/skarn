@@ -6,6 +6,30 @@ definePageMeta({
 useHead({
   title: "Home",
 });
+
+// Data structure for organizing educational content
+const subjects = [
+  {
+    name: "Matemática",
+    class: "math",
+    items: [
+      { name: "Frações", link: "/math/fractions" },
+      { name: "Raiz quadrada", link: "/math/squareroot" },
+      { name: "Tabuada", link: "/math/multi-table" },
+      { name: "Círculo unitário", link: "/math/unit-circle" },
+      { name: "Números inteiros", link: "/math/number-line" },
+    ],
+  },
+  {
+    name: "Física",
+    class: "physics",
+    items: [
+      { name: "Dilatação", link: "/physics/dilatation" },
+      { name: "Escalas termométricas", link: "/physics/thermo-scales" },
+      { name: "1ª Lei de Newton", link: "/physics/newton-f" },
+    ],
+  },
+];
 </script>
 
 <template>
@@ -14,34 +38,20 @@ useHead({
     <h6>recursos pedagógicos interativos para todos</h6>
   </main>
   <section>
-    <div class="subject-section">
-      <h3>Matemática</h3>
+    <div
+      v-for="subject in subjects"
+      :key="subject.name"
+      class="subject-section"
+    >
+      <h3>{{ subject.name }}</h3>
       <div>
-        <NuxtLink to="/math/fractions" class="math">
-          <p>Frações</p>
-        </NuxtLink>
-        <NuxtLink to="/math/squareroot" class="math">
-          <p>Raiz quadrada</p>
-        </NuxtLink>
-        <NuxtLink to="/math/multi-table" class="math">
-          <p>Tabuada</p>
-        </NuxtLink>
-        <NuxtLink to="/math/unit-circle" class="math">
-          <p>Círculo unitário</p>
-        </NuxtLink>
-      </div>
-    </div>
-    <div class="subject-section">
-      <h3>Física</h3>
-      <div>
-        <NuxtLink to="/physics/dilatation" class="physics">
-          <p>Dilatação</p>
-        </NuxtLink>
-        <NuxtLink to="/physics/thermo-scales" class="physics">
-          <p>Escalas termométricas</p>
-        </NuxtLink>
-        <NuxtLink to="/physics/newton-f" class="physics">
-          <p>1ª Lei de Newton</p>
+        <NuxtLink
+          v-for="item in subject.items"
+          :key="item.link"
+          :to="item.link"
+          :class="subject.class"
+        >
+          <p>{{ item.name }}</p>
         </NuxtLink>
       </div>
     </div>
