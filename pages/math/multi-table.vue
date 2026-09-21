@@ -91,20 +91,20 @@ class Button {
   }
   draw(c) {
     if (!this.hover) {
-      c.fillStyle = "#fcffbe";
+      c.fillStyle = "#f7f5ef";
     } else {
-      c.fillStyle = "#035E7B";
+      c.fillStyle = "#243f5d";
     }
 
-    c.strokeStyle = "#035E7B";
+    c.strokeStyle = "#243f5d";
     c.beginPath();
-    c.roundRect(this.x, this.y, this.width, this.height, this.width * 0.1);
+    c.roundRect(this.x, this.y, this.width, this.height, this.width * 0.025);
     c.fill();
     c.stroke();
 
-    c.font = `bold ${0.03 * innerWidth}px Itim`;
+    c.font = `500 ${0.03 * innerWidth}px "DM Sans", Arial`;
     c.textAlign = "center";
-    c.fillStyle = this.hover ? "#fcffbe" : "#035E7B";
+    c.fillStyle = this.hover ? "#f7f5ef" : "#243f5d";
     c.fillText(
       this.type == "verify" ? this.content.value : this.content,
       this.x + this.width / 2,
@@ -212,13 +212,13 @@ onMounted(() => {
   const c = canvas.value.getContext("2d");
   function animate() {
     requestAnimationFrame(animate);
-    c.fillStyle = "#fcffbe";
+    c.fillStyle = "#f7f5ef";
     c.fillRect(0, 0, innerWidth, innerHeight);
 
     nums[hiddenKey] = answer.value == "" ? "?" : answer.value;
 
-    c.fillStyle = "#035E7B";
-    c.font = `bold ${0.2 * innerHeight}px Itim`;
+    c.fillStyle = "#243f5d";
+    c.font = `500 ${0.2 * innerHeight}px "DM Sans", Arial`;
     c.textAlign = "center";
     c.fillText(
       `${nums[0]} X ${nums[1]} = ${nums[2]}`,
@@ -227,8 +227,8 @@ onMounted(() => {
     );
 
     if (displayResult) {
-      c.fillStyle = answer.value == hidden ? "#51BBFE" : "#035E7B!";
-      c.font = `bold ${0.1 * innerHeight}px Itim`;
+      c.fillStyle = answer.value == hidden ? "#26745d" : "#a04e46";
+      c.font = `500 ${0.1 * innerHeight}px "DM Sans", Arial`;
       c.fillText(displayResult, innerWidth * 0.3, innerHeight * 0.6);
     }
 

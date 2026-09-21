@@ -86,7 +86,7 @@ svg { width: 100%; flex: 1; min-height: 0; }
 text { fill: var(--dark-blue); font-family: var(--itim); font-size: 24px; }
 .label { font-size: 18px; } .metadata { font-size: 23px; } .activeLabel { font-weight: bold; }
 .cell { fill: transparent; stroke: var(--dark-blue); stroke-width: 1; }
-.dependency { fill: #51bbfe; } .picked { fill: var(--darker-yellow); }
+.dependency { fill: #a9c4e0; } .picked { fill: var(--darker-yellow); }
 .pending { opacity: .25; }
 .selectable-cell { cursor: pointer; }
 .selectable-cell:focus-visible { outline: 3px solid var(--dark-blue); outline-offset: 2px; }
@@ -94,4 +94,12 @@ text { fill: var(--dark-blue); font-family: var(--itim); font-size: 24px; }
 .connections { color: var(--dark-blue); fill: none; stroke: var(--dark-blue); stroke-width: 2; pointer-events: none; }
 .operation { font-size: 30px; } .assignment { font-size: 25px; }
 @media (prefers-reduced-motion: reduce) { .cursor { transition: none; } }
+
+.animation { padding-bottom: 56px; box-sizing: border-box; }
+.controls { border-bottom: 1px solid var(--line); padding: 18px 24px; }
+button { border-width: 1px; border-color: #b6c5d4; border-radius: 8px; background: var(--surface); font-size: 13px; padding: 9px 16px; }
+label { color: var(--muted); font-size: 13px; }
+text { font-family: var(--font-mono); }
+.label { font-family: var(--font-sans); }
+
 </style>

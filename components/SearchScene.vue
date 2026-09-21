@@ -176,18 +176,18 @@ onBeforeUnmount(() => { cancelAnimationFrame(frame); observer?.disconnect(); med
 svg { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 svg:active { cursor: grabbing; }
 svg:focus-visible { outline: 2px solid #ba662c; outline-offset: -3px; }
-text { fill: #035e7b; font-family: var(--itim); }
+text { fill: #243f5d; font-family: var(--itim); }
 .edge path { fill: none; stroke: #94a6a0; stroke-width: 2; transition: stroke .25s; }
 .edge rect { fill: var(--light-yellow); }
 .edge text { font-size: 18px; }
 .edge.inspecting path { stroke: #bb6329; stroke-width: 3.5; }
 .edge.solution path { stroke: #267f56; stroke-width: 3.5; }
-.node > circle, .tile rect { fill: #fffedc; stroke: #8ca4aa; stroke-width: 1.5; transition: fill .25s, stroke .25s; }
-.current > circle, .current rect { fill: #f4c87c; stroke: #ac6b22; stroke-width: 2.5; }
-.frontier > circle, .frontier rect { fill: #bce6f7; stroke: #327d9b; }
-.expanded > circle, .expanded rect { fill: #dfe4d8; stroke: #7a8b76; }
-.solution > circle, .solution rect { fill: #b9dfbd; stroke: #267f56; }
-.wall rect { fill: #346170; stroke: #346170; }
+.node > circle, .tile rect { fill: #ffffff; stroke: #8ca4aa; stroke-width: 1.5; transition: fill .25s, stroke .25s; }
+.current > circle, .current rect { fill: #e7d5b9; stroke: #ac6b22; stroke-width: 2.5; }
+.frontier > circle, .frontier rect { fill: #d7e4f1; stroke: #327d9b; }
+.expanded > circle, .expanded rect { fill: #e3e7eb; stroke: #7a8b76; }
+.solution > circle, .solution rect { fill: #c9ded4; stroke: #267f56; }
+.wall rect { fill: #384c62; stroke: #384c62; }
 .node .goal-ring { fill: none; stroke-width: 1; }
 .node-id { font-size: 25px; }.node-cost { font-size: 16px; paint-order: stroke; stroke: var(--light-yellow); stroke-width: 5px; stroke-linejoin: round; }
 .coordinate { font-size: 12px; }.tile-small { font-size: 11px; }.tile-score { font-size: 13px; }.tile-marker { font-size: 21px; }
@@ -196,7 +196,13 @@ text { fill: #035e7b; font-family: var(--itim); }
 .tracer { fill: #bb6329; pointer-events: none; }.current-ring { fill: none; stroke: #ac6b22; stroke-width: 2; pointer-events: none; animation: pulse .65s ease-out; }
 @keyframes pulse { from { opacity: 1; stroke-width: 5; } to { opacity: .45; stroke-width: 2; } }
 .view-controls { position: absolute; right: 6px; bottom: 6px; display: flex; gap: 6px; }
-button { padding: 6px 10px; border: 1px solid #035e7b55; border-radius: 8px; background: #fcffbee6; color: #035e7b; font: inherit; font-size: 13px; cursor: pointer; }
+button { padding: 6px 10px; border: 1px solid #243f5d55; border-radius: 8px; background: #f7f5efe6; color: #243f5d; font: inherit; font-size: 13px; cursor: pointer; }
 button:focus-visible { outline: 2px solid #ba662c; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .node > circle, .tile rect, .edge path { transition: none; }.current-ring { animation: none; } }
+
+text { font-family: var(--font-mono); }
+.edge rect { fill: var(--surface); }
+.node-cost { stroke: var(--surface); }
+.view-controls button { border-radius: 8px; background: #fffffff5; color: var(--ink); font: 12px var(--font-sans); }
+
 </style>

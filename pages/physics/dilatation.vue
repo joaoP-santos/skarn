@@ -23,7 +23,7 @@ useHead({
 const temperatureModel = ref(0);
 const tempColor = computed(() => {
   return new THREE.Color(
-    `hsl(${temperatureModel.value > 0 ? 0 : 180}, 100%, ${
+    `hsl(${temperatureModel.value > 0 ? 0 : 210}, 25%, ${
       100 - Math.abs(temperatureModel.value) * 1.5
     }%)`
   );
@@ -40,7 +40,7 @@ onMounted(() => {
 
   renderer.setSize(innerWidth, innerHeight);
   renderer.setPixelRatio(devicePixelRatio * 1.5);
-  renderer.setClearColor(0xfcffbe);
+  renderer.setClearColor(0xf7f5ef);
   addEventListener("resize", () => {
     renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(devicePixelRatio * 1.5);
@@ -59,13 +59,13 @@ onMounted(() => {
   const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
   const cylinderGeometry = new THREE.CylinderGeometry(1.8, 2, 1);
   const material = new THREE.MeshPhongMaterial({
-    color: 0x035e7b,
+    color: 0x243f5d,
   });
 
   const initialCube = new THREE.Mesh(
     boxGeometry,
     new THREE.MeshPhongMaterial({
-      color: 0xffff00,
+      color: 0xb8c8d8,
       transparent: true,
       opacity: 1,
       depthWrite: false,
@@ -74,7 +74,7 @@ onMounted(() => {
   const variationCube = new THREE.Mesh(
     boxGeometry,
     new THREE.MeshPhongMaterial({
-      color: 0x00ffff,
+      color: 0x6384a6,
       transparent: true,
       opacity: 0.5,
       depthWrite: false,
@@ -309,4 +309,8 @@ p {
 input {
   width: 100%;
 }
+
+div#inputs { top: 20px; left: 20px; padding: 16px 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+p, strong { color: var(--ink); font: 500 14px/1.6 var(--font-sans); }
+
 </style>

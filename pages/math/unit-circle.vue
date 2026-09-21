@@ -52,7 +52,7 @@ onMounted(() => {
       sin: -Math.round(Math.sin((angle.value * Math.PI) / 180) * 1000) / 1000,
       cos: Math.round(Math.cos((angle.value * Math.PI) / 180) * 1000) / 1000,
     };
-    c.fillStyle = "#FCFFBE";
+    c.fillStyle = "#f7f5ef";
     c.fillRect(0, 0, innerWidth, innerHeight);
 
     //x-axis
@@ -97,24 +97,24 @@ onMounted(() => {
     c.stroke();
 
     //Circle
-    c.strokeStyle = "#035E7B";
-    c.lineWidth = 5;
+    c.strokeStyle = "#243f5d";
+    c.lineWidth = 2;
     c.beginPath();
     c.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
     c.stroke();
 
     //Triangle
-    c.lineWidth = 3;
+    c.lineWidth = 1.5;
 
     //Radius
     c.beginPath();
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.moveTo(circle.x, circle.y);
     c.lineTo(circle.point.x, circle.point.y);
     c.stroke();
     c.closePath();
 
-    c.font = `bold ${0.05 * innerHeight}px Itim`;
+    c.font = `500 ${0.05 * innerHeight}px "DM Sans", Arial`;
     c.fillText(
       1,
       circle.x +
@@ -127,14 +127,14 @@ onMounted(() => {
 
     //Sine
     c.beginPath();
-    c.strokeStyle = "#035E7B";
+    c.strokeStyle = "#243f5d";
     c.moveTo(circle.point.x, circle.point.y);
     c.lineTo(circle.point.x, circle.y);
     c.stroke();
     c.closePath();
 
     c.textAlign = "center";
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.fillText(
       content.sin,
       circle.x +
@@ -144,13 +144,13 @@ onMounted(() => {
     );
     //Cosine
     c.beginPath();
-    c.strokeStyle = "#035E7B";
+    c.strokeStyle = "#243f5d";
     c.moveTo(circle.point.x, circle.y);
     c.lineTo(circle.x, circle.y);
     c.stroke();
     c.closePath();
 
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.fillText(
       content.cos,
       circle.x + circle.xLength / 2,
@@ -169,7 +169,7 @@ onMounted(() => {
     );
     c.stroke();
 
-    c.font = `bold ${0.03 * innerHeight}px Itim`;
+    c.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
 
     c.fillText(
       `${360 - angle.value}°`,
@@ -182,7 +182,7 @@ onMounted(() => {
     );
 
     //Points
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
 
     c.beginPath();
     c.arc(circle.point.x, circle.point.y, 5, 0, 2 * Math.PI);
@@ -232,4 +232,8 @@ input {
 input::-webkit-slider-thumb {
   background-color: var(--dark-blue);
 }
+
+div#inputs { top: 20px; left: 20px; padding: 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+strong { font: 500 14px/1.5 var(--font-sans); }
+
 </style>

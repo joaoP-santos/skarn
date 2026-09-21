@@ -27,64 +27,13 @@ useHead({
 </template>
 
 <style scoped>
-div#text {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: start;
-
-  align-self: center;
-  justify-self: center;
-
-  margin-left: 32px;
-  width: 45vw;
-  height: 50vh;
-}
-
-div#text p {
-  font-family: var(--fred);
-  font-size: 1.25em;
-  color: white;
-}
-
-div#text div {
-  display: flex;
-  flex-direction: column;
-
-  margin-top: 16px;
-  gap: 24px;
-}
-
-div#text strong {
-  font-family: var(--fred);
-  font-size: 1em;
-  color: white;
-  font-weight: 600;
-}
-
-h1 {
-  color: white;
-}
-
-div#blue-trapezium {
-  display: flex;
-
-  z-index: -1;
-  position: absolute;
-  left: 0;
-  width: 60vw;
-  height: 100vh;
-  background-color: var(--dark-blue);
-  -webkit-clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
-  clip-path: polygon(0 0, 75% 0, 100% 100%, 0 100%);
-}
-
-div#yellow-trapezium {
-  z-index: -2;
-  position: absolute;
-  right: 0;
-  width: 60vw;
-  height: 100vh;
-  background-color: var(--darker-yellow);
-}
+#blue-trapezium { min-height: calc(100dvh - 80px); display: flex; align-items: center; position: relative; box-sizing: border-box; padding: 80px max(6vw, calc((100vw - 1180px) / 2)); background: var(--paper); }
+#text { position: relative; z-index: 1; max-width: 720px; padding-left: 40px; border-left: 2px solid var(--accent); }
+h1 { margin-bottom: 30px; color: var(--ink); }
+#text > div { display: flex; flex-direction: column; gap: 32px; }
+p { max-width: 600px; color: var(--muted); font: 400 18px/1.8 var(--font-sans); }
+p + p { padding: 24px; border-radius: 10px; background: #e8f0e9; border: 1px solid var(--line); font: 400 14px/2 var(--font-mono); overflow-wrap: anywhere; }
+strong { color: var(--ink); font-weight: 500; }
+#yellow-trapezium { position: fixed; right: 0; top: 80px; bottom: 0; width: 24vw; pointer-events: none; opacity: .35; background-image: linear-gradient(#b8c6d333 1px, transparent 1px), linear-gradient(90deg, #b8c6d333 1px, transparent 1px); background-size: 32px 32px; }
+@media (max-width: 700px) { #blue-trapezium { padding: 50px 6vw 80px; } #text { padding-left: 22px; } }
 </style>

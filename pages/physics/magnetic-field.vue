@@ -54,13 +54,13 @@ function init() {
   directionalLight.position.set(0, 1, 0);
   scene.add(directionalLight);
 
-  renderer.setClearColor(0xfcffbe);
+  renderer.setClearColor(0xf7f5ef);
 }
 
 function createWire() {
   const wireGeometry = new THREE.CylinderGeometry(0.05, 0.05, 40, 32);
   const wireMaterial = new THREE.MeshPhongMaterial({
-    color: 0x00ff00,
+    color: 0x698195,
     transparent: true,
     opacity: 0.5,
   }); // Green color for visibility
@@ -86,7 +86,7 @@ function createArrows() {
       direction,
       origin,
       arrowLength,
-      0xff0000,
+      0xa06444,
       arrowHeadLength,
       arrowHeadWidth
     );
@@ -105,7 +105,7 @@ function createArrows() {
       cDirection,
       cOrigin,
       arrowLength,
-      0x0000ff,
+      0x245fa8,
       arrowHeadLength,
       arrowHeadWidth
     );
@@ -257,7 +257,7 @@ watch([currentDirection], updateOnChange);
   padding: 10px;
   max-width: 30vw;
   background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
+  border-radius: 8px;
   z-index: 10;
 }
 
@@ -274,4 +274,8 @@ input {
 .switch {
   display: flex;
 }
+
+div#inputs { top: 20px; left: 20px; padding: 16px 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+p, strong { color: var(--ink); font: 500 14px/1.6 var(--font-sans); }
+
 </style>

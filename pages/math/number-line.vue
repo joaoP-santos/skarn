@@ -181,19 +181,19 @@ onMounted(() => {
     const c = canvas.value.getContext("2d");
 
     // Clear canvas
-    c.fillStyle = "#FCFFBE";
+    c.fillStyle = "#f7f5ef";
     c.fillRect(0, 0, innerWidth, innerHeight);
 
     // Draw number line
-    c.strokeStyle = "#035E7B";
-    c.lineWidth = 3;
+    c.strokeStyle = "#243f5d";
+    c.lineWidth = 1.5;
     c.beginPath();
     c.moveTo(innerWidth * 0.1, innerHeight / 2);
     c.lineTo(innerWidth * 0.9, innerHeight / 2);
     c.stroke();
 
     // Draw ticks and numbers
-    c.font = `bold ${0.03 * innerHeight}px Itim`;
+    c.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
     c.textAlign = "center";
     const range = 10;
     const spacing = (innerWidth * 0.8) / range; // Modified to show only 0-10 range
@@ -209,7 +209,7 @@ onMounted(() => {
       c.stroke();
 
       // Draw number
-      c.fillStyle = "#035E7B";
+      c.fillStyle = "#243f5d";
       c.fillText(i, x, innerHeight / 2 + 35);
     }
 
@@ -221,28 +221,28 @@ onMounted(() => {
 
       c.beginPath();
       c.arc(pointX, innerHeight / 2 - 40, 7, 0, Math.PI * 2);
-      c.fillStyle = isSelected ? "#51BBFE" : "#035E7B";
+      c.fillStyle = isSelected ? "#a9c4e0" : "#243f5d";
       c.fill();
 
       // Show selected number above the point after submission
       if (showSelectedNumber.value && isSelected) {
-        c.font = `bold ${0.04 * innerHeight}px Itim`;
+        c.font = `500 ${0.04 * innerHeight}px "DM Sans", Arial`;
         c.textAlign = "center";
-        c.fillStyle = isCorrect ? "#4CAF50" : "#F44336"; // Fixed color logic
+        c.fillStyle = isCorrect ? "#26745d" : "#a04e46"; // Fixed color logic
         c.fillText(formatNumber(point), pointX, innerHeight / 2 - 60);
 
         // Highlight the point with matching color
         c.beginPath();
         c.arc(pointX, innerHeight / 2 - 40, 10, 0, Math.PI * 2);
-        c.strokeStyle = isCorrect ? "#4CAF50" : "#F44336"; // Fixed color logic
-        c.lineWidth = 3;
+        c.strokeStyle = isCorrect ? "#26745d" : "#a04e46"; // Fixed color logic
+        c.lineWidth = 1.5;
         c.stroke();
       }
     });
 
     // Draw target prompt
-    c.font = `bold ${0.05 * innerHeight}px Itim`;
-    c.fillStyle = "#035E7B";
+    c.font = `500 ${0.05 * innerHeight}px "DM Sans", Arial`;
+    c.fillStyle = "#243f5d";
     c.textAlign = "center";
     c.fillText(
       t("Encontre o número: {0}", [formatNumber(targetNumber.value)]),
@@ -251,7 +251,7 @@ onMounted(() => {
     );
 
     // Draw score
-    c.font = `bold ${0.03 * innerHeight}px Itim`;
+    c.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
     c.fillText(
       t("Pontuação: {0}", [score.value]),
       innerWidth * 0.85,
@@ -259,8 +259,8 @@ onMounted(() => {
     );
 
     // Draw lives
-    c.font = `bold ${0.03 * innerHeight}px Itim`;
-    c.fillStyle = "#035E7B";
+    c.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
+    c.fillStyle = "#243f5d";
     const heartSize = innerHeight * 0.03;
     for (let i = 0; i < lives.value; i++) {
       c.fillText(
@@ -281,8 +281,8 @@ onMounted(() => {
       c.beginPath();
       c.moveTo(startX, innerHeight / 2 + 40);
       c.lineTo(progressX - 15, innerHeight / 2 + 40); // Stop before the arrowhead
-      c.strokeStyle = "#51BBFE";
-      c.lineWidth = 5;
+      c.strokeStyle = "#a9c4e0";
+      c.lineWidth = 2;
       c.stroke();
 
       // Draw arrowhead
@@ -292,13 +292,13 @@ onMounted(() => {
         c.lineTo(progressX - 15, innerHeight / 2 + 30);
         c.lineTo(progressX - 15, innerHeight / 2 + 50);
         c.closePath();
-        c.fillStyle = "#51BBFE";
+        c.fillStyle = "#a9c4e0";
         c.fill();
 
         // Show length at the tip of the arrow with proper formatting
-        c.font = `bold ${0.03 * innerHeight}px Itim`;
+        c.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
         c.textAlign = "center";
-        c.fillStyle = "#035E7B";
+        c.fillStyle = "#243f5d";
 
         // Calculate current value based on progress and format it properly
         const currentValue = targetNumber.value * animationProgress.value;
@@ -311,18 +311,18 @@ onMounted(() => {
           innerWidth * 0.1 + (targetNumber.value / 10) * (innerWidth * 0.8);
         c.beginPath();
         c.arc(targetX, innerHeight / 2 - 40, 10, 0, Math.PI * 2);
-        c.strokeStyle = "#4CAF50"; // Green for the correct target
-        c.lineWidth = 3;
+        c.strokeStyle = "#26745d"; // Green for the correct target
+        c.lineWidth = 1.5;
         c.stroke();
       }
     }
 
     // Draw result message
     if (gameState.value === "checking" || gameState.value === "result") {
-      c.font = `bold ${0.05 * innerHeight}px Itim`;
+      c.font = `500 ${0.05 * innerHeight}px "DM Sans", Arial`;
       c.fillStyle = selectedPoint.value === targetNumber.value
-        ? "#4CAF50"
-        : "#F44336";
+        ? "#26745d"
+        : "#a04e46";
       c.fillText(resultMessage.value, innerWidth / 2, innerHeight * 0.8);
     }
   }
@@ -377,7 +377,7 @@ div#inputs {
   max-width: 30vw;
   min-width: 220px;
   background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
+  border-radius: 8px;
   top: 20px;
   left: 20px;
   z-index: 10;
@@ -450,4 +450,8 @@ strong {
   cursor: pointer;
   z-index: 5;
 }
+
+div#inputs { top: 20px; left: 20px; padding: 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+strong { font: 500 14px/1.5 var(--font-sans); }
+
 </style>

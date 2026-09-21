@@ -8,9 +8,9 @@ const label = computed(() => props.angle === 45 ? 'π/4' : props.angle === 30 ? 
 <template>
   <figure class="special-triangle">
     <svg viewBox="0 0 300 260" role="img" :aria-label="`${angle} degree reference triangle${showValues ? ' with side lengths' : ''}`">
-      <path :d="`M 40 215 H ${40 + width} V ${215 - height} Z`" fill="none" stroke="#278e6e" stroke-width="2" />
-      <path :d="`M ${26 + width} 215 v -14 h 14`" fill="none" stroke="#278e6e" />
-      <path :d="`M 70 215 A 30 30 0 0 0 ${40 + 30 * Math.cos(angle * Math.PI / 180)} ${215 - 30 * Math.sin(angle * Math.PI / 180)}`" fill="none" stroke="#278e6e" />
+      <path :d="`M 40 215 H ${40 + width} V ${215 - height} Z`" fill="none" stroke="#245fa8" stroke-width="2" />
+      <path :d="`M ${26 + width} 215 v -14 h 14`" fill="none" stroke="#245fa8" />
+      <path :d="`M 70 215 A 30 30 0 0 0 ${40 + 30 * Math.cos(angle * Math.PI / 180)} ${215 - 30 * Math.sin(angle * Math.PI / 180)}`" fill="none" stroke="#245fa8" />
       <text x="77" y="203">{{ label }}</text>
       <text :x="27 + width" :y="245 - height" text-anchor="end">{{ angle === 45 ? 'π/4' : angle === 30 ? 'π/3' : 'π/6' }}</text>
       <template v-if="showValues">
@@ -24,5 +24,5 @@ const label = computed(() => props.angle === 45 ? 'π/4' : props.angle === 30 ? 
 </template>
 
 <style scoped>
-.special-triangle{margin:0;text-align:center}.special-triangle svg{width:100%;max-height:210px;display:block}.special-triangle text{font:18px Georgia,serif;fill:#071b20}.special-triangle figcaption{font-size:12px;color:#596865}
+.special-triangle{margin:0;text-align:center}.special-triangle svg{width:100%;max-height:210px;display:block}.special-triangle text{font:18px Georgia,serif;fill:#172b42}.special-triangle figcaption{font-size:12px;color:#596865}
 </style>

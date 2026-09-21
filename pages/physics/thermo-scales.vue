@@ -48,7 +48,7 @@ class Termometer {
   draw(c) {
     console.log(this.fill.value);
     c.fillStyle = "#FFFFFF";
-    c.lineWidth = 5;
+    c.lineWidth = 2;
 
     c.beginPath();
     c.arc(this.x, this.y, this.width, 0, 2 * Math.PI);
@@ -65,7 +65,7 @@ class Termometer {
 
     c.fill();
     c.beginPath();
-    c.fillStyle = "red";
+    c.fillStyle = "#a06444";
     c.roundRect(
       this.x - this.width / 4,
       this.y + this.width * 0.15,
@@ -75,9 +75,9 @@ class Termometer {
     );
     c.fill();
 
-    c.font = `bold ${0.05 * innerHeight}px Itim`;
+    c.font = `500 ${0.05 * innerHeight}px "DM Sans", Arial`;
     c.textAlign = "center";
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.fillText(
       `${Math.round(this.fill.value * this.factor * 100) / 100 + this.base} ${
         this.sufix
@@ -106,7 +106,7 @@ onMounted(() => {
 
   function animate() {
     requestAnimationFrame(animate);
-    c.fillStyle = `hsl(${temperature.value > 30 ? 0 : 180}, 100%, ${
+    c.fillStyle = `hsl(${temperature.value > 30 ? 0 : 210}, 25%, ${
       temperature.value > 30
         ? 120 - (temperature.value * 60) / 120
         : (temperature.value * 100) / 30 + 50
@@ -149,4 +149,8 @@ strong {
 input {
   width: 100%;
 }
+
+div { top: 20px; left: 20px; padding: 18px 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+p, strong { color: var(--ink); font: 500 14px/1.6 var(--font-sans); }
+
 </style>

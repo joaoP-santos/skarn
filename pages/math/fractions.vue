@@ -39,19 +39,19 @@ onMounted(() => {
     numerator.max = denominator.value;
     c.clearRect(0, 0, innerWidth, innerHeight);
     c.fill();
-    c.lineWidth = 5;
+    c.lineWidth = 2;
     c.beginPath();
     c.rect(rectX, rectY, rectWidth, rectHeight);
-    c.strokeStyle = "#001B24";
+    c.strokeStyle = "#183c40";
     c.stroke();
-    c.fillStyle = "#45C4B0";
+    c.fillStyle = "#9aafc1";
     c.fill();
 
     for (var i = 0; i < denominator.value; i++) {
       if (numerator.value > i) {
-        c.fillStyle = "#8FF7A7";
+        c.fillStyle = "#eef2f5";
       } else {
-        c.fillStyle = "#035E7B";
+        c.fillStyle = "#243f5d";
       }
       c.beginPath();
       c.rect(
@@ -64,8 +64,8 @@ onMounted(() => {
       c.stroke();
       c.fill();
     }
-    c.font = `bold ${0.1 * innerHeight}px Itim`;
-    c.fillStyle = "#8FF7A7";
+    c.font = `500 ${0.1 * innerHeight}px "DM Sans", Arial`;
+    c.fillStyle = "#eef2f5";
     c.textAlign = "center";
     c.fillText(numerator.value, innerWidth / 2, (innerHeight * 2) / 20);
 
@@ -74,7 +74,7 @@ onMounted(() => {
     c.lineTo(innerWidth / 2 + innerHeight * 0.1, (innerHeight * 7) / 50);
     c.stroke();
 
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.fillText(denominator.value, innerWidth / 2, (innerHeight * 5) / 20);
   }
 
@@ -114,4 +114,8 @@ strong {
 input {
   width: 100%;
 }
+
+div { top: 20px; left: 20px; padding: 18px 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+p, strong { color: var(--ink); font: 500 14px/1.6 var(--font-sans); }
+
 </style>

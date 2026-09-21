@@ -25,7 +25,7 @@ class Cactus {
     this.width = innerWidth * 0.1;
     this.height = this.width * 0.3;
     this.radius = 30;
-    this.color = "yellow";
+    this.color = "#bcc9d6";
     cacti.push(this);
   }
 
@@ -82,10 +82,10 @@ onMounted(() => {
     lineCount++;
   }
   function animate() {
-    ctx.fillStyle = "#fcffbe";
+    ctx.fillStyle = "#f7f5ef";
     ctx.fillRect(plane.dx, 0, innerWidth, innerHeight);
 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#243f5d";
     ctx.fillRect(100, 100, 100, 100);
 
     if (running.value) {
@@ -98,7 +98,7 @@ onMounted(() => {
       lineCount++;
     }
 
-    ctx.fillStyle = "gray";
+    ctx.fillStyle = "#e0e6ed";
     ctx.fillRect(
       plane.dx,
       (innerHeight * 3) / 12,
@@ -110,12 +110,12 @@ onMounted(() => {
       cac.draw(ctx, plane);
     });
 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#243f5d";
 
     vehicles.forEach((veh) => {
       var x = running.value ? plane.dx : stopedX;
       ctx.fillRect(veh.x + x, veh.y, veh.width, veh.height);
-      ctx.font = `bold ${0.03 * innerHeight}px Itim`;
+      ctx.font = `500 ${0.03 * innerHeight}px "DM Sans", Arial`;
       ctx.fillText(`${veh.mass.value}kg`, veh.x + x, veh.y + veh.height * 1.7);
       ctx.fillText(
         `${Math.round(veh.dx * 10)} km/h`,
@@ -169,7 +169,7 @@ onMounted(() => {
 
 <style>
 * {
-  font-family: Itim, sans-serif;
+  font-family: var(--font-sans);
 }
 div#controls {
   position: absolute;
@@ -188,7 +188,7 @@ input {
 
 button {
   padding: 10px 20px;
-  background-color: #f44336;
+  background-color: #a04e46;
   color: white;
   border: none;
   border-radius: 5px;
@@ -202,6 +202,11 @@ button {
 }
 
 button:hover {
-  background-color: #d32f2f;
+  background-color: #853e37;
 }
+
+div#controls { border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; background: #fffffff5; }
+strong { font: 500 14px/1.6 var(--font-sans); }
+button { border-radius: 8px; font: 500 13px var(--font-sans); }
+
 </style>

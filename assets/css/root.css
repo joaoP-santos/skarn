@@ -1,14 +1,31 @@
+/* Skarn: warm paper, clear typography, and expressive scientific color. */
 :root {
-    --dark-blue: #035e7b;
-    --darkest-blue: #001B24;
-    --light-yellow: #FCFFBE;
-    --darker-yellow: #F4E76E;
-    --lemon: "Lemon", sans-serif;
-    --itim: "Itim", serif;
-    --fred: "Fredoka", sans-serif;
+  --font-sans: "DM Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --paper: #f7f5ef;
+  --mint: #e8f0e9;
+  --lavender: #edf0fa;
+  --sand: #f3ebdb;
+  --surface: #ffffff;
+  --ink: #172b42;
+  --muted: #5d6b7b;
+  --line: #dedfd7;
+  --accent: #24786e;
+  --dark-blue: #243f5d;
+  --darkest-blue: #183c40;
+  --light-yellow: #f7f5ef;
+  --darker-yellow: #eee1bd;
+  --lemon: var(--font-sans);
+  --itim: var(--font-sans);
+  --fred: var(--font-sans);
 }
-
-h1 {
-    font-family: var(--fred);
-    font-size: 4em;
-}
+html { background: var(--paper); color: var(--ink); }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans); font-weight: 500; }
+h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); letter-spacing: -.045em; }
+button, input, select, textarea { font-family: inherit; }
+button, select { touch-action: manipulation; }
+input[type="range"] { accent-color: var(--accent); }
+a, button, select, input { -webkit-tap-highlight-color: transparent; }
+:where(a, button, select, input):focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+::selection { background: #cbdced; color: #14263a; }

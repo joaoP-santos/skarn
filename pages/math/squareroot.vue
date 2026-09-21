@@ -52,17 +52,17 @@ onMounted(() => {
     c.clearRect(0, 0, innerWidth, innerHeight);
     c.rect(0, 0, innerWidth, innerHeight);
 
-    c.fillStyle = "#8FF7A7";
+    c.fillStyle = "#eef2f5";
     c.fill();
-    c.lineWidth = 5;
+    c.lineWidth = 2;
     c.beginPath();
     c.rect(rectX, rectY, rectLength, rectLength);
-    c.fillStyle = "#FCFFBE";
+    c.fillStyle = "#f7f5ef";
     c.fill();
     for (let x = 0; x < side; x++) {
       for (let y = 0; y < side; y++) {
         c.beginPath();
-        c.strokeStyle = "#45C4B0";
+        c.strokeStyle = "#9aafc1";
 
         c.moveTo(
           (innerWidth - rectLength) / 2 + (x * rectLength) / side,
@@ -85,15 +85,15 @@ onMounted(() => {
         c.stroke();
       }
     }
-    c.lineWidth = 5;
+    c.lineWidth = 2;
     c.beginPath();
     c.rect(rectX, rectY, rectLength, rectLength);
-    c.strokeStyle = "#035E7B";
+    c.strokeStyle = "#243f5d";
     c.stroke();
 
-    c.font = `bold ${0.05 * innerHeight}px Itim`;
+    c.font = `500 ${0.05 * innerHeight}px "DM Sans", Arial`;
     c.textAlign = "center";
-    c.fillStyle = "#035E7B";
+    c.fillStyle = "#243f5d";
     c.fillText(
       t("Área total: {0}", [Math.pow(side, 2)]),
       innerWidth / 2,
@@ -131,10 +131,14 @@ p {
 
 input {
   width: 100%;
-  accent-color: var(--light-yellow);
+  accent-color: var(--accent);
 }
 
 input::-webkit-slider-thumb {
-  background-color: var(--light-yellow);
+  background-color: var(--accent);
 }
+
+div { top: 20px; left: 20px; padding: 18px 20px; background: #fffffff5; border: 1px solid var(--line); border-radius: 8px; }
+p, strong { color: var(--ink); font: 500 14px/1.6 var(--font-sans); }
+
 </style>

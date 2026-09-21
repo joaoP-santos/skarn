@@ -11,25 +11,15 @@ const { t } = useLanguage();
 </template>
 <style scoped>
 div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
-
-  left: 50%;
-  transform: translateX(-50%);
-
-  position: absolute;
-  width: 40vw;
-  height: 15vh;
-
-  background-color: #036584;
-  box-shadow: 0 0 250px rgba(0, 0, 0, 0.5);
+  position: relative; z-index: 20;
+  display: flex; align-items: center; justify-content: flex-end; gap: 38px;
+  min-height: 80px; padding: 0 max(6vw, calc((100vw - 1280px) / 2));
+  border-bottom: 1px solid #ffffff20; background: #183c40;
 }
-a {
-  font-family: var(--itim);
-  font-size: 1.25em;
-  color: white;
-  text-decoration: none;
-}
+a { position: relative; display: flex; align-items: center; min-height: 80px;
+  color: #bdd2ce; text-decoration: none; font: 500 13px var(--font-mono); letter-spacing: .02em; }
+a:hover, a.router-link-exact-active { color: #fff; }
+a.router-link-exact-active::after { content: ""; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #deb978; }
+a:focus-visible { outline-color: #9abce2; }
+@media (max-width: 700px) { div { min-height: 64px; gap: 28px; } a { min-height: 64px; } }
 </style>
