@@ -1,5 +1,9 @@
+<script setup>
+const { t } = useLanguage();
+</script>
+
 <template>
-  <div>Rotacione a tela para utilizar o site!</div>
+  <div>{{ t('Rotacione a tela para utilizar o site!') }}</div>
 </template>
 <style scoped>
 div {

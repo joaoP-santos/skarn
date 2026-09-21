@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "default",
 });
@@ -10,7 +11,7 @@ useHead({
 // Data structure for organizing educational content
 const subjects = [
   {
-    name: "Inteligência artificial",
+    name: t("Inteligência artificial"),
     class: "math",
     items: [
       { name: "Script 1 · Knapsack", link: "/ai/knapsack" },
@@ -19,24 +20,24 @@ const subjects = [
     ],
   },
   {
-    name: "Matemática",
+    name: t("Matemática"),
     class: "math",
     items: [
-      { name: "Frações", link: "/math/fractions" },
-      { name: "Raiz quadrada", link: "/math/squareroot" },
-      { name: "Tabuada", link: "/math/multi-table" },
-      { name: "Círculo unitário", link: "/math/unit-circle" },
+      { name: t("Frações"), link: "/math/fractions" },
+      { name: t("Raiz quadrada"), link: "/math/squareroot" },
+      { name: t("Tabuada"), link: "/math/multi-table" },
+      { name: t("Círculo unitário"), link: "/math/unit-circle" },
       { name: "Trig Sprint", link: "/math/trig-sprint" },
-      { name: "Números inteiros", link: "/math/number-line" },
+      { name: t("Números inteiros"), link: "/math/number-line" },
     ],
   },
   {
-    name: "Física",
+    name: t("Física"),
     class: "physics",
     items: [
-      { name: "Dilatação", link: "/physics/dilatation" },
-      { name: "Escalas termométricas", link: "/physics/thermo-scales" },
-      { name: "1ª Lei de Newton", link: "/physics/newton-f" },
+      { name: t("Dilatação"), link: "/physics/dilatation" },
+      { name: t("Escalas termométricas"), link: "/physics/thermo-scales" },
+      { name: t("1ª Lei de Newton"), link: "/physics/newton-f" },
     ],
   },
 ];
@@ -45,7 +46,7 @@ const subjects = [
 <template>
   <main>
     <h1>Skarn</h1>
-    <h6>recursos pedagógicos interativos para todos</h6>
+    <h6>{{ t('recursos pedagógicos interativos para todos') }}</h6>
   </main>
   <section>
     <div

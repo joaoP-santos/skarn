@@ -1,24 +1,24 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "default",
 });
 
 useHead({
-  title: "Doar",
+  title: t("Doar"),
 });
 </script>
 <template>
   <div id="blue-trapezium">
     <div id="text">
-      <h1>Seja o impacto.</h1>
+      <h1>{{ t('Seja o impacto.') }}</h1>
       <div>
         <p>
-          Cada doação é um passo adiante ao sonho de mudar a educação. Sua
-          contribuição é mais que bem-vinda.
+          {{ t('Cada doação é um passo adiante ao sonho de mudar a educação. Sua contribuição é mais que bem-vinda.') }}
         </p>
         <p>
-          <strong>Chave PIX:</strong> c34916be-39b4-432c-9176-ac2b6c3890ea<br />
-          <strong>Recipiente:</strong> João Pedro Marques Santos
+          <strong>{{ t('Chave PIX:') }}</strong> c34916be-39b4-432c-9176-ac2b6c3890ea<br />
+          <strong>{{ t('Recipiente:') }}</strong> João Pedro Marques Santos
         </p>
       </div>
     </div>

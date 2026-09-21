@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLanguage();
 import * as THREE from "three";
 
 import katex from "katex";
@@ -7,7 +8,7 @@ definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Dilatação",
+  title: t("Dilatação"),
   link: [
     {
       rel: "stylesheet",
@@ -247,7 +248,7 @@ onMounted(() => {
   <div id="inputs">
     <div>
       <p>
-        Variação de temperatura:
+        {{ t('Variação de temperatura:') }}
         <strong></strong>
       </p>
       <input
@@ -259,15 +260,15 @@ onMounted(() => {
       />
     </div>
     <div>
-      <p>Coeficiente de dilatação: <strong></strong></p>
+      <p>{{ t('Coeficiente de dilatação:') }} <strong></strong></p>
       <input min="1" max="75" type="range" name="coefficient" />
     </div>
     <div>
-      <p>Volume inicial: <strong></strong></p>
+      <p>{{ t('Volume inicial:') }} <strong></strong></p>
       <input min="0" max="100" type="range" name="initialVolume" />
     </div>
     <div>
-      <p>Variação de volume: <strong></strong></p>
+      <p>{{ t('Variação de volume:') }} <strong></strong></p>
     </div>
   </div>
   <div id="canvas"></div>

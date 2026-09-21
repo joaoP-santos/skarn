@@ -1,11 +1,12 @@
 <script setup>
+const { t } = useLanguage();
 import { ref, onMounted, computed } from "vue";
 
 definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Jogo da Reta Numérica",
+  title: t("Jogo da Reta Numérica"),
 });
 
 const canvas = ref(null);
@@ -113,18 +114,16 @@ function submitAnswer() {
   showSelectedNumber.value = true;
 
   if (isCorrect) {
-    resultMessage.value = "Correto!";
+    resultMessage.value = t("Correto!");
     score.value += 1;
   } else {
     lives.value -= 1;
     if (lives.value <= 0) {
-      resultMessage.value = `Game Over! Sua pontuação final: ${score.value}`;
+      resultMessage.value = t("Game Over! Sua pontuação final: {0}", [score.value]);
       lives.value = 3;
       score.value = 0;
     } else {
-      resultMessage.value = `Incorreto! O número correto era ${formatNumber(
-        targetNumber.value
-      )}`;
+      resultMessage.value = t("Incorreto! O número correto era {0}", [formatNumber(targetNumber.value)]);
     }
   }
 
@@ -246,7 +245,7 @@ onMounted(() => {
     c.fillStyle = "#035E7B";
     c.textAlign = "center";
     c.fillText(
-      `Encontre o número: ${formatNumber(targetNumber.value)}`,
+      t("Encontre o número: {0}", [formatNumber(targetNumber.value)]),
       innerWidth / 2,
       innerHeight * 0.15
     );
@@ -254,7 +253,7 @@ onMounted(() => {
     // Draw score
     c.font = `bold ${0.03 * innerHeight}px Itim`;
     c.fillText(
-      `Pontuação: ${score.value}`,
+      t("Pontuação: {0}", [score.value]),
       innerWidth * 0.85,
       innerHeight * 0.08
     );
@@ -321,7 +320,7 @@ onMounted(() => {
     // Draw result message
     if (gameState.value === "checking" || gameState.value === "result") {
       c.font = `bold ${0.05 * innerHeight}px Itim`;
-      c.fillStyle = resultMessage.value.includes("Correto")
+      c.fillStyle = selectedPoint.value === targetNumber.value
         ? "#4CAF50"
         : "#F44336";
       c.fillText(resultMessage.value, innerWidth / 2, innerHeight * 0.8);
@@ -336,8 +335,8 @@ onMounted(() => {
     <div class="input-group">
       <strong>{{
         gameState === "waiting"
-          ? "Clique em um ponto na reta"
-          : "Veja o resultado"
+          ? t("Clique em um ponto na reta")
+          : t("Veja o resultado")
       }}</strong>
 
       <div class="button-container">
@@ -347,7 +346,7 @@ onMounted(() => {
           :disabled="selectedPoint === null"
           class="action-button"
         >
-          Confirmar
+          {{ t('Confirmar') }}
         </button>
 
         <button
@@ -355,7 +354,7 @@ onMounted(() => {
           @click="nextRound"
           class="action-button"
         >
-          Próxima Rodada
+          {{ t('Próxima Rodada') }}
         </button>
       </div>
     </div>

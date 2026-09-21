@@ -1,8 +1,12 @@
+<script setup>
+const { t } = useLanguage();
+</script>
+
 <template>
   <div>
-    <NuxtLink to="/">Aprender</NuxtLink>
-    <NuxtLink to="/contact">Contato</NuxtLink>
-    <NuxtLink to="/donate">Doar</NuxtLink>
+    <NuxtLink to="/">{{ t('Aprender') }}</NuxtLink>
+    <NuxtLink to="/contact">{{ t('Contato') }}</NuxtLink>
+    <NuxtLink to="/donate">{{ t('Doar') }}</NuxtLink>
   </div>
 </template>
 <style scoped>

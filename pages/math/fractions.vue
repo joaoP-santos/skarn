@@ -1,9 +1,10 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Frações",
+  title: t("Frações"),
 });
 
 onMounted(() => {
@@ -83,10 +84,10 @@ onMounted(() => {
 
 <template>
   <div style="position: absolute; display: block; padding: 10px">
-    <strong>Numerador: </strong>
+    <strong>{{ t('Numerador:') }} </strong>
     <input type="range" name="numerator" id="numeratorInput" min="0" max="30" />
     <br />
-    <strong>Denominador: </strong>
+    <strong>{{ t('Denominador:') }} </strong>
     <input
       type="range"
       name="denominator"

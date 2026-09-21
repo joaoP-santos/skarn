@@ -1,9 +1,10 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Raiz quadrada",
+  title: t("Raiz quadrada"),
 });
 
 onMounted(() => {
@@ -21,7 +22,7 @@ onMounted(() => {
       return;
     } else {
       side = sideInput.value;
-      sideText.innerHTML = "Comprimento do lado: " + side;
+      sideText.innerHTML = t("Comprimento do lado: ") + side;
       if (innerHeight > innerWidth) {
         rectLength = (side * innerHeight) / 60;
       } else {
@@ -94,7 +95,7 @@ onMounted(() => {
     c.textAlign = "center";
     c.fillStyle = "#035E7B";
     c.fillText(
-      `Área total: ${Math.pow(side, 2)}`,
+      t("Área total: {0}", [Math.pow(side, 2)]),
       innerWidth / 2,
       rectY + rectLength + 0.1 * innerHeight
     );
@@ -105,7 +106,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <p>Comprimento do lado:</p>
+    <p>{{ t('Comprimento do lado:') }}</p>
     <input type="range" name="numerator" id="side-input" min="0" max="30" />
     <br />
   </div>

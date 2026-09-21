@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLanguage();
 import { ref, onMounted, watch, computed } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -221,11 +222,11 @@ watch([currentDirection], updateOnChange);
     </div>
 
     <div>
-      <strong>Campo (T):</strong>
+      <strong>{{ t('Campo (T):') }}</strong>
       {{ magneticIntensity.toExponential(2) }}
     </div>
     <div>
-      <strong> Sentido </strong>
+      <strong> {{ t('Sentido') }} </strong>
       <div class="switch">
         <input
           name="up"
@@ -233,7 +234,7 @@ watch([currentDirection], updateOnChange);
           :checked="currentDirection == 'up'"
           v-on:click="() => (currentDirection = 'up')"
         />
-        <span>Para cima</span>
+        <span>{{ t('Para cima') }}</span>
       </div>
       <div class="switch">
         <input
@@ -242,7 +243,7 @@ watch([currentDirection], updateOnChange);
           :checked="currentDirection == 'down'"
           v-on:click="() => (currentDirection = 'down')"
         />
-        <span>Para baixo</span>
+        <span>{{ t('Para baixo') }}</span>
       </div>
     </div>
   </div>

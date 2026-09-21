@@ -1,15 +1,16 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "sketch",
 });
 
 useHead({
-  title: "Tabuada",
+  title: t("Tabuada"),
 });
 
 const canvas = ref(null);
 const answer = ref("");
-const buttonMessage = ref("Verificar");
+const buttonMessage = ref(t("Verificar"));
 
 var nums = [0, 0, 0];
 var hidden = 0;
@@ -33,15 +34,15 @@ function generatePhase() {
 }
 
 function buttonPress() {
-  if (buttonMessage.value == "Próximo") {
+  if (buttonMessage.value == t("Próximo")) {
     generatePhase();
     displayResult = "";
     answer.value = "";
-    buttonMessage.value = "Verificar";
+    buttonMessage.value = t("Verificar");
     return;
   }
-  displayResult = answer.value == hidden ? "Isso aí!" : "Não é bem isso!";
-  if (answer.value == hidden) buttonMessage.value = "Próximo";
+  displayResult = answer.value == hidden ? t("Isso aí!") : t("Não é bem isso!");
+  if (answer.value == hidden) buttonMessage.value = t("Próximo");
 }
 
 function answerChanged() {

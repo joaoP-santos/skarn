@@ -1,9 +1,10 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Círculo unitário",
+  title: t("Círculo unitário"),
 });
 
 const canvas = ref(null);
@@ -202,7 +203,7 @@ onMounted(() => {
 
 <template>
   <div id="inputs">
-    <strong>Ângulo (°):</strong>
+    <strong>{{ t('Ângulo (°):') }}</strong>
     <input v-model="angleInput" type="range" name="angle" min="0" max="360" />
   </div>
   <canvas ref="canvas"></canvas>

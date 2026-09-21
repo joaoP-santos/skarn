@@ -1,4 +1,5 @@
 <script setup>
+const { t } = useLanguage();
 import { ref, onMounted } from "vue";
 
 definePageMeta({
@@ -6,7 +7,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "1º Lei de Newton: Inércia",
+  title: t("1º Lei de Newton: Inércia"),
 });
 
 const cacti = [];
@@ -154,14 +155,14 @@ onMounted(() => {
 <template>
   <div id="controls">
     <div>
-      <strong>Massa 1:</strong>
+      <strong>{{ t('Massa 1:') }}</strong>
       <input min="2000" max="5000" v-model="mass1" type="range" name="mass1" />
     </div>
     <div>
-      <strong>Massa 2:</strong>
+      <strong>{{ t('Massa 2:') }}</strong>
       <input min="2000" max="5000" v-model="mass2" type="range" name="mass2" />
     </div>
-    <button @click="stopVehicles">Parar</button>
+    <button @click="stopVehicles">{{ t('Parar') }}</button>
   </div>
   <canvas ref="canvas"></canvas>
 </template>

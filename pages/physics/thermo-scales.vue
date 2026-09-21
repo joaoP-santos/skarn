@@ -1,9 +1,10 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "sketch",
 });
 useHead({
-  title: "Escalas termométricas",
+  title: t("Escalas termométricas"),
 });
 
 const canvas = ref(null);
@@ -119,7 +120,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <strong>Temperatura:</strong>
+    <strong>{{ t('Temperatura:') }}</strong>
     <input
       min="0"
       max="100"

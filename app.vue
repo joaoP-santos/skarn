@@ -1,7 +1,10 @@
 <script setup>
 import "~/assets/css/root.css";
 
-useHead({
+const { locale } = useLanguage();
+
+useHead(() => ({
+  htmlAttrs: { lang: locale.value === "pt" ? "pt-BR" : "en" },
   titleTemplate: (title) => {
     return title ? `${title} - Skarn` : "Skarn";
   },
@@ -29,13 +32,14 @@ useHead({
       rel: "stylesheet",
     },
   ],
-});
+}));
 </script>
 
 <template>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <LanguageSwitcher />
 </template>
 
 <style>

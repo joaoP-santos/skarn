@@ -1,9 +1,10 @@
 <script setup>
+const { t } = useLanguage();
 definePageMeta({
   layout: "default",
 });
 useHead({
-  title: "Contato",
+  title: t("Contato"),
 });
 </script>
 <template>
@@ -11,19 +12,14 @@ useHead({
     <div id="container">
       <div><NuxtImg src="/contact.jpg" /></div>
       <div>
-        <h1>Olá!</h1>
+        <h1>{{ t('Olá!') }}</h1>
         <p>
-          Meu nome é João Pedro Marques Santos e sou o criador do Skarn. Tenho
-          paixão por STEM e por criar soluções alternativas e eficazes. Fique à
-          vontade para entrar em contato por e-mail, WhatsApp ou qualquer outro
-          meio.
+          {{ t('Meu nome é João Pedro Marques Santos e sou o criador do Skarn. Tenho paixão por STEM e por criar soluções alternativas e eficazes. Fique à vontade para entrar em contato por e-mail, WhatsApp ou qualquer outro meio.') }}
           <br /><br />
-          O Skarn não é o único projeto com que estou envolvido. Também
-          desenvolvo um aplicativo de saúde mental para estudantes. Venha
-          conhecer!
+          {{ t('O Skarn não é o único projeto com que estou envolvido. Também desenvolvo um aplicativo de saúde mental para estudantes. Venha conhecer!') }}
           <br /><br />
           <strong>Email:</strong> santosjoaopedroms@gmail.com<br />
-          <strong>Telefone/WhatsApp:</strong> +55 73 9 9847-2618
+          <strong>{{ t('Telefone/WhatsApp:') }}</strong> +55 73 9 9847-2618
         </p>
         <div>
           <NuxtLink
