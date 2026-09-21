@@ -10,6 +10,15 @@ useHead({
 // Data structure for organizing educational content
 const subjects = [
   {
+    name: "Inteligência artificial",
+    class: "math",
+    items: [
+      { name: "Script 1 · Knapsack", link: "/ai/knapsack" },
+      { name: "DFS · BFS · UCS", link: "/ai/uninformed-search" },
+      { name: "A* · Manhattan", link: "/ai/a-star-manhattan" },
+    ],
+  },
+  {
     name: "Matemática",
     class: "math",
     items: [
@@ -17,6 +26,7 @@ const subjects = [
       { name: "Raiz quadrada", link: "/math/squareroot" },
       { name: "Tabuada", link: "/math/multi-table" },
       { name: "Círculo unitário", link: "/math/unit-circle" },
+      { name: "Trig Sprint", link: "/math/trig-sprint" },
       { name: "Números inteiros", link: "/math/number-line" },
     ],
   },
