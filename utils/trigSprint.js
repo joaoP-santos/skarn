@@ -2,11 +2,11 @@ const families = [
   { name: "Exact unit-circle values", blurb: "Sine and cosine at the standard angles.", cards: [
     [String.raw`\sin 0`, "0", "sin(0)", ["0"], false], [String.raw`\cos 0`, "1", "cos(0)", ["1"], false],
     [String.raw`\sin\frac\pi6`, String.raw`\frac12`, "sin(pi/6)", ["1/2"], false], [String.raw`\cos\frac\pi6`, String.raw`\frac{\sqrt3}{2}`, "cos(pi/6)", ["sqrt(3)/2", "√3/2"], false],
-    [String.raw`\sin\frac\pi4`, String.raw`\frac1{\sqrt2}`, "sin(pi/4)", ["1/sqrt(2)", "sqrt(2)/2", "1/√2"], false], [String.raw`\cos\frac\pi4`, String.raw`\frac1{\sqrt2}`, "cos(pi/4)", ["1/sqrt(2)", "sqrt(2)/2", "1/√2"], false],
+    [String.raw`\sin\frac\pi4`, String.raw`\frac{\sqrt2}{2}`, "sin(pi/4)", ["sqrt(2)/2", "√2/2", "1/sqrt(2)", "1/√2"], false], [String.raw`\cos\frac\pi4`, String.raw`\frac{\sqrt2}{2}`, "cos(pi/4)", ["sqrt(2)/2", "√2/2", "1/sqrt(2)", "1/√2"], false],
     [String.raw`\sin\frac\pi3`, String.raw`\frac{\sqrt3}{2}`, "sin(pi/3)", ["sqrt(3)/2", "√3/2"], false], [String.raw`\cos\frac\pi3`, String.raw`\frac12`, "cos(pi/3)", ["1/2"], false],
     [String.raw`\sin\frac\pi2`, "1", "sin(pi/2)", ["1"], false], [String.raw`\cos\frac\pi2`, "0", "cos(pi/2)", ["0"], false],
     [String.raw`\sin\frac{2\pi}3`, String.raw`\frac{\sqrt3}{2}`, "sin(2pi/3)", ["sqrt(3)/2", "√3/2"], false], [String.raw`\cos\frac{2\pi}3`, String.raw`-\frac12`, "cos(2pi/3)", ["-1/2"], false],
-    [String.raw`\sin\frac{3\pi}4`, String.raw`\frac1{\sqrt2}`, "sin(3pi/4)", ["1/sqrt(2)", "sqrt(2)/2", "1/√2"], false], [String.raw`\cos\frac{3\pi}4`, String.raw`-\frac1{\sqrt2}`, "cos(3pi/4)", ["-1/sqrt(2)", "-sqrt(2)/2", "-1/√2"], false],
+    [String.raw`\sin\frac{3\pi}4`, String.raw`\frac{\sqrt2}{2}`, "sin(3pi/4)", ["sqrt(2)/2", "√2/2", "1/sqrt(2)", "1/√2"], false], [String.raw`\cos\frac{3\pi}4`, String.raw`-\frac{\sqrt2}{2}`, "cos(3pi/4)", ["-sqrt(2)/2", "-√2/2", "-1/sqrt(2)", "-1/√2"], false],
     [String.raw`\sin\frac{5\pi}6`, String.raw`\frac12`, "sin(5pi/6)", ["1/2"], false], [String.raw`\cos\frac{5\pi}6`, String.raw`-\frac{\sqrt3}{2}`, "cos(5pi/6)", ["-sqrt(3)/2", "-√3/2"], false],
     [String.raw`\sin\pi`, "0", "sin(pi)", ["0"], false], [String.raw`\cos\pi`, "-1", "cos(pi)", ["-1"], false],
     [String.raw`\sin\frac{3\pi}2`, "-1", "sin(3pi/2)", ["-1"], false], [String.raw`\cos\frac{3\pi}2`, "0", "cos(3pi/2)", ["0"], false],
