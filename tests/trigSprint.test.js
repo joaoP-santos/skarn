@@ -20,6 +20,8 @@ for (const [index, level] of levels.slice(0, -1).entries()) {
   assert.equal(buildRound(index, "learn").length, level.cards.length);
 }
 assert.equal(buildRound(levels.length - 1, "practice").length, 12);
+const skippedTo = levels.length - 2;
+assert.deepEqual(new Set(buildRound(skippedTo, "practice").map(entry => entry.id)), new Set(levels[skippedTo].entries.map(entry => entry.id)), "Skipping ahead introduces only that level's facts");
 assert.ok(!cards.some(({ card }) => card[0].includes("P(x,y)") || card[3].some(answer => /opp|hyp|adj|^[xyr]\/[xyr]$/.test(answer))));
 
 // Every identity in the supplied chart, including all ± and double-angle forms.
@@ -58,13 +60,19 @@ assert.deepEqual(restoreProgress(migrated), migrated);
 const source = readFileSync(new URL("../pages/math/trig-sprint.vue", import.meta.url), "utf8");
 const script = source.match(/<script setup>([\s\S]*?)<\/script>/)[1].replace(/^import .*;$/gm, "");
 const pending = new Map();
+const intervals = new Map();
+let elapsedClock = 0;
+let unmount;
 let timerId = 0;
 const sandbox = vm.createContext({
   ...curriculum, ref, reactive, computed,
-  definePageMeta() {}, useHead() {}, onMounted() {}, onBeforeUnmount() {}, nextTick() {},
+  definePageMeta() {}, useHead() {}, onMounted() {}, onBeforeUnmount(callback) { unmount = callback; }, nextTick() {},
   localStorage: { setItem() {} },
+  performance: { now: () => elapsedClock },
   setTimeout(callback) { pending.set(++timerId, callback); return timerId; },
   clearTimeout(id) { pending.delete(id); },
+  setInterval(callback) { intervals.set(++timerId, callback); return timerId; },
+  clearInterval(id) { intervals.delete(id); },
 });
 vm.runInContext(script, sandbox);
 const run = code => vm.runInContext(code, sandbox);
@@ -72,27 +80,53 @@ const advance = () => { const callbacks = [...pending.values()]; pending.clear()
 const answer = (wrong = false) => { run(`input.value = ${wrong ? '"wrong"' : 'current.value.answers[0]'}; submit()`); advance(); };
 run('start(0)');
 assert.equal(run('roundSize.value'), 6);
-assert.equal(pending.size, 0, "No countdown or elapsed-time timer");
-answer(true);
+assert.equal(pending.size, 0, "No time limit");
+assert.equal(run('elapsedTime.value'), "0:00");
+elapsedClock = 125000;
+intervals.forEach(callback => callback());
+assert.equal(run('elapsedTime.value'), "2:05");
+assert.equal(run('screen.value'), "game", "Passing 60 seconds cannot end a round");
 assert.equal(run('completed.value'), 0);
-run('hint(); input.value = current.value.answers[0]; submit()');
+assert.equal(run('score.value'), 0, "Elapsed time does not affect scoring");
+run('input.value = "wrong"; submit()');
+assert.equal(run('locked.value && !good.value'), true);
+assert.equal(run('correctionLatex.value'), run('current.value.displayAnswer'));
+assert.equal(run('completed.value'), 0);
+run('insert("sin")');
+assert.equal(run('input.value'), "wrong", "Feedback preserves the submitted answer");
 advance();
-assert.equal(run('completed.value'), 0, "Hints require an unaided retry");
+assert.equal(run('locked.value'), false);
+assert.equal(run('correctionLatex.value'), "");
+run('input.value = current.value.answers[0]; submit()');
+assert.equal(run('locked.value && good.value'), true);
+assert.equal(run('completed.value'), 1);
+advance();
 while (run('screen.value') === "game") answer();
 assert.equal(run('completed.value'), 6);
 assert.equal(run('screen.value'), "results");
-assert.equal(run('unlocked(1)'), true);
+assert.equal(intervals.size, 0, "Completion stops the elapsed timer");
+assert.equal(run('elapsedTime.value'), "2:05");
+run('start(1)');
+assert.equal(run('elapsedTime.value'), "0:00", "A new round resets elapsed time");
 run('start(1); input.value = current.value.answers[0]; submit(); exit()');
 assert.equal(pending.size, 0, "Leaving cancels pending next-card work");
+assert.equal(intervals.size, 0, "Leaving stops the elapsed timer");
 advance();
 assert.equal(run('screen.value'), "levels");
-assert.equal(run('progress.levels[1]'), 0, "An abandoned round cannot unlock the next level");
+assert.equal(run('progress.levels[1]'), 0, "An abandoned round cannot record completion");
 run('start(1, "learn")');
 while (run('screen.value') === "game") answer();
 assert.equal(run('progress.levels[1]'), 0, "Copying answers does not pass practice");
 run('start(1)');
 for (let i = 0; i < 4; i++) answer(true);
 while (run('screen.value') === "game") answer();
-assert.equal(run('unlocked(2)'), false, "Completing retries still requires the accuracy gate");
+assert.ok(run('progress.levels[1]') < 80, "Low accuracy is recorded without restricting level access");
+run(`start(${skippedTo})`);
+assert.equal(run('level.value'), skippedTo, "An uncompleted level can be started directly");
+assert.equal(run('screen.value'), "game");
+run(`start(${skippedTo})`);
+assert.equal(intervals.size, 1, "Restarting cannot leave duplicate timers");
+unmount();
+assert.equal(intervals.size, 0, "Unmounting cleans up the elapsed timer");
 
-console.log(`trig sprint: ${levels.length - 1} small levels, chart coverage, adaptive review, saved progress, and untimed round lifecycle passed`);
+console.log(`trig sprint: ${levels.length - 1} small levels, chart coverage, adaptive review, saved progress, open level access, and elapsed timer lifecycle passed`);

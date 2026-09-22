@@ -9,12 +9,15 @@ useHead({ title: "Trig Sprint - Skarn" });
 
 const screen = ref("levels"); const level = ref(0); const referenceLevel = ref(0); const mode = ref("practice"); const input = ref(""); const inputEl = ref(); const symbolsOpen = ref(false);
 const roundSize = ref(0); const completed = ref(0); const correct = ref(0); const attempts = ref(0); const streak = ref(0); const bestStreak = ref(0); const score = ref(0);
-const current = ref(null); const queue = ref([]); const locked = ref(false); const message = ref(""); const correctionLatex = ref(""); const good = ref(false); const usedHint = ref(false);
+const current = ref(null); const queue = ref([]); const locked = ref(false); const message = ref(""); const correctionLatex = ref(""); const good = ref(false);
+const elapsedSeconds = ref(0);
+const elapsedTime = computed(() => `${Math.floor(elapsedSeconds.value / 60)}:${String(elapsedSeconds.value % 60).padStart(2, "0")}`);
 let nextCardTimeout;
+let elapsedTicker;
+let roundStartedAt;
 const progress = reactive({ levels: Array(levels.length).fill(0), cards: {} });
 
 const latex = (value) => katex.renderToString(value || "", { throwOnError: false, displayMode: true });
-const unlocked = (i) => i === 0 || progress.levels[i - 1] >= PASS_ACCURACY;
 const totalMastery = computed(() => { const values = allCards().map(entry => progress.cards[entry.id] || {}); return values.length ? Math.round(values.reduce((sum, c) => sum + (c.strength || 0), 0) / values.length) : 0; });
 const renderedInput = computed(() => input.value ? katex.renderToString(mathInputToLatex(input.value), { throwOnError: false }) : "");
 const referenceGroups = computed(() => referenceLevel.value === levels.length - 1
@@ -22,8 +25,18 @@ const referenceGroups = computed(() => referenceLevel.value === levels.length - 
   : [{ name: levels[referenceLevel.value].name, cards: levels[referenceLevel.value].cards }]);
 
 function persist() { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
+function updateElapsed() { elapsedSeconds.value = Math.floor((performance.now() - roundStartedAt) / 1000); }
+function stopElapsed() {
+  if (elapsedTicker !== undefined) updateElapsed();
+  clearInterval(elapsedTicker);
+  elapsedTicker = undefined;
+}
 function start(li, selectedMode = "practice") {
   clearTimeout(nextCardTimeout);
+  stopElapsed();
+  elapsedSeconds.value = 0;
+  roundStartedAt = performance.now();
+  elapsedTicker = setInterval(updateElapsed, 250);
   mode.value = selectedMode;
   level.value = li; correct.value = attempts.value = streak.value = bestStreak.value = score.value = completed.value = 0;
   queue.value = buildRound(li, selectedMode, progress.cards);
@@ -37,7 +50,7 @@ function next() {
   if (!queue.value.length) return finish();
   const base = queue.value.shift();
   current.value = { ...base, shown: base.card[0], displayAnswer: base.card[1], answers: base.card[3] };
-  input.value = ""; message.value = ""; correctionLatex.value = ""; locked.value = false; good.value = false; usedHint.value = false; nextTick(() => inputEl.value?.focus());
+  input.value = ""; message.value = ""; correctionLatex.value = ""; locked.value = false; good.value = false; nextTick(() => inputEl.value?.focus());
 }
 function normalize(value) {
   return value.replaceAll("θ", "x").replace(/theta/gi, "x").replaceAll("π", "pi").replaceAll("²", "^2").toLowerCase()
@@ -50,26 +63,25 @@ function normalize(value) {
 function submit() {
   if (screen.value !== "game" || locked.value || !input.value.trim()) return; locked.value = true; attempts.value++; const ok = current.value.answers.some(a => normalize(a) === normalize(input.value)); const memory = progress.cards[current.value.id] || { strength: 0 };
   if (ok) {
-    correct.value++; streak.value++; bestStreak.value = Math.max(bestStreak.value, streak.value); score.value += usedHint.value ? 0 : 100 + streak.value * 8;
-    if (!usedHint.value || mode.value === "learn") completed.value++;
-    else queue.value.splice(Math.min(2, queue.value.length), 0, { card: current.value.card, id: current.value.id, cue: current.value.cue });
-    memory.strength = Math.min(100, memory.strength + (usedHint.value ? 5 : 14)); memory.due = Date.now() + Math.max(1, memory.strength / 12) * 86400000; message.value = streak.value > 2 ? `Correct · ${streak.value} streak` : "Correct"; good.value = true;
+    correct.value++; streak.value++; bestStreak.value = Math.max(bestStreak.value, streak.value); score.value += 100 + streak.value * 8;
+    completed.value++;
+    memory.strength = Math.min(100, memory.strength + 14); memory.due = Date.now() + Math.max(1, memory.strength / 12) * 86400000; message.value = "Correct!"; good.value = true;
   } else {
-    streak.value = 0; memory.strength = Math.max(0, memory.strength - 8); memory.due = Date.now(); queue.value.splice(mode.value === "learn" ? 0 : Math.min(2, queue.value.length), 0, { card: current.value.card, id: current.value.id, cue: current.value.cue }); message.value = "Correct answer"; correctionLatex.value = current.value.displayAnswer;
+    streak.value = 0; memory.strength = Math.max(0, memory.strength - 8); memory.due = Date.now(); queue.value.splice(mode.value === "learn" ? 0 : Math.min(2, queue.value.length), 0, { card: current.value.card, id: current.value.id, cue: current.value.cue }); message.value = "Not quite"; correctionLatex.value = current.value.displayAnswer;
   }
-  progress.cards[current.value.id] = memory; persist(); nextCardTimeout = setTimeout(next, ok ? 450 : 1300);
+  progress.cards[current.value.id] = memory; persist(); nextCardTimeout = setTimeout(next, ok ? 850 : 2400);
 }
-function hint() { if (!current.value || locked.value) return; usedHint.value = true; const answer = current.value.answers[0]; message.value = `Hint: ${answer.slice(0, Math.max(1, Math.ceil(answer.length * .3)))}… (${answer.length} characters)`; inputEl.value?.focus(); }
 function finish() {
   clearTimeout(nextCardTimeout);
+  stopElapsed();
   if (mode.value === "practice") progress.levels[level.value] = Math.max(progress.levels[level.value] || 0, accuracy.value);
   persist(); screen.value = "results";
 }
-function exit() { clearTimeout(nextCardTimeout); screen.value = "levels"; }
-function insert(text) { const el = inputEl.value; const start = el.selectionStart; const end = el.selectionEnd; input.value = input.value.slice(0, start) + text + input.value.slice(end); nextTick(() => { el.focus(); el.setSelectionRange(start + text.length, start + text.length); }); }
+function exit() { clearTimeout(nextCardTimeout); stopElapsed(); screen.value = "levels"; }
+function insert(text) { if (locked.value) return; const el = inputEl.value; const start = el.selectionStart; const end = el.selectionEnd; input.value = input.value.slice(0, start) + text + input.value.slice(end); nextTick(() => { el.focus(); el.setSelectionRange(start + text.length, start + text.length); }); }
 function keydown(event) {
+  if (locked.value) { if (event.key !== 'Tab') event.preventDefault(); return; }
   if (event.key === "Enter") return submit(); if (event.key === "Tab") { event.preventDefault(); symbolsOpen.value = !symbolsOpen.value; return; }
-  if (event.key.toLowerCase() === "h" && !input.value) return hint();
   if (event.key === "ArrowRight" && inputEl.value.selectionStart === input.value.length) {
     const open = (input.value.match(/\(/g) || []).length; const closed = (input.value.match(/\)/g) || []).length;
     if (open > closed) { event.preventDefault(); input.value += ")"; }
@@ -80,7 +92,7 @@ const resultTitle = computed(() => accuracy.value >= 90 ? "Reflexes unlocked." :
 
 const resultNote = computed(() => {
   if (mode.value === "learn") return "You have seen each new fact. Practice next to recall it without the answer.";
-  if (accuracy.value < PASS_ACCURACY) return `Repeat this step to reach ${PASS_ACCURACY}% accuracy. Missed facts will come back for review.`;
+  if (accuracy.value < PASS_ACCURACY) return "Missed facts will come back for review. Repeat this step or choose any other level.";
   return level.value === levels.length - 1 ? "Review complete. Come back whenever you want to refresh these facts." : "Step complete. The next small set is ready.";
 });
 
@@ -91,7 +103,7 @@ onMounted(() => {
     Object.assign(progress, restoreProgress(saved, legacy));
   } catch { /* A damaged save should not prevent practice. */ }
 });
-onBeforeUnmount(() => clearTimeout(nextCardTimeout));
+onBeforeUnmount(() => { clearTimeout(nextCardTimeout); stopElapsed(); });
 </script>
 
 <template>
@@ -102,12 +114,12 @@ onBeforeUnmount(() => clearTimeout(nextCardTimeout));
     </header>
 
     <section v-if="screen === 'levels'" class="levels-screen">
-      <div class="hero"><p class="eyebrow">BUILD MUSCLE MEMORY</p><h1>Make identities<br><em>instinctive.</em></h1><p class="intro">Learn one or two new facts at a time. Repeat them, mix in earlier facts, and unlock the next small step with 80% accuracy. Take as long as you need.</p></div>
+      <div class="hero"><p class="eyebrow">BUILD MUSCLE MEMORY</p><h1>Make identities<br><em>instinctive.</em></h1><p class="intro">Learn one or two new facts at a time. Repeat them and mix in earlier facts. Every level is available—start anywhere and take as long as you need.</p></div>
       <div class="levels">
-        <article v-for="(item, i) in levels" :key="item.name" class="level" :class="{ locked: !unlocked(i) }">
-          <small>LEVEL {{ String(i + 1).padStart(2, '0') }}</small><span>{{ unlocked(i) ? (progress.levels[i] ? `${progress.levels[i]}%` : 'READY') : `LOCKED · ${PASS_ACCURACY}%` }}</span>
+        <article v-for="(item, i) in levels" :key="item.name" class="level">
+          <small>LEVEL {{ String(i + 1).padStart(2, '0') }}</small><span>{{ progress.levels[i] ? `${progress.levels[i]}%` : 'READY' }}</span>
           <h2>{{ item.name }}</h2><p>{{ item.blurb }}</p><i><b :style="{ width: `${progress.levels[i]}%` }"></b></i>
-          <div v-if="unlocked(i)" class="level-actions"><button @click="review(i)">Reference</button><button @click="start(i, 'learn')">Learn</button><button @click="start(i)">Practice →</button></div>
+          <div class="level-actions"><button @click="review(i)">Reference</button><button @click="start(i, 'learn')">Learn</button><button @click="start(i)">Practice →</button></div>
         </article>
       </div>
       <aside><b>⌨ Fast notation</b><span>Angles are optional: type <kbd>sin</kbd>, not sin(θ). In longer formulas use <kbd>s(</kbd> sin · <kbd>c(</kbd> cos · <kbd>t(</kbd> tan · <kbd>sc(</kbd> sec · <kbd>cs(</kbd> csc · <kbd>ct(</kbd> cot.</span></aside>
@@ -133,9 +145,9 @@ onBeforeUnmount(() => clearTimeout(nextCardTimeout));
     </section>
 
     <section v-else-if="screen === 'game'" class="game-screen">
-      <div class="game-head"><button @click="exit">← Levels</button><b>{{ mode === 'learn' ? 'LEARN · ' : '' }}{{ levels[level].name }}</b><strong>{{ completed }} / {{ roundSize }}</strong></div>
+      <div class="game-head"><button @click="exit">← Levels</button><b>{{ mode === 'learn' ? 'LEARN · ' : '' }}{{ levels[level].name }}</b><div class="round-stats"><div><span>RECALLS</span><strong>{{ completed }} / {{ roundSize }}</strong></div><div><span>ELAPSED</span><strong role="timer" aria-label="Elapsed time">{{ elapsedTime }}</strong></div></div></div>
       <div class="round-progress" role="progressbar" aria-label="Round progress" :aria-valuenow="completed" :aria-valuemax="roundSize" :aria-valuemin="0"><i :style="{ width: `${roundSize ? completed / roundSize * 100 : 0}%` }"></i></div>
-      <article v-if="current" class="question-card">
+      <article v-if="current" class="question-card" :class="{ 'answer-correct': locked && good, 'answer-incorrect': locked && !good }">
         <div class="meta"><span>{{ current.id.startsWith('1-') ? 'EXACT VALUE' : 'IDENTITY' }}</span><span>{{ mode === 'learn' ? 'LEARN' : 'RECALL' }}</span></div>
         <p>{{ mode === 'learn' ? 'Type the answer shown below' : (current.cue || 'Type the equivalent form') }}</p>
         <div class="formula" v-html="latex(current.shown)"></div>
@@ -143,20 +155,35 @@ onBeforeUnmount(() => clearTimeout(nextCardTimeout));
         <div v-if="mode === 'learn'" class="learn-target"><span>COPY THIS</span><div v-html="latex(current.displayAnswer)"></div></div>
         <div class="math-editor" :class="{ right: good, wrong: locked && !good }" @click="inputEl?.focus()">
           <div class="rendered-answer"><span v-if="input" v-html="renderedInput"></span><span v-else class="placeholder">Type your answer</span><i class="math-caret"></i></div>
-          <input ref="inputEl" v-model="input" class="math-capture" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your answer" @keydown="keydown">
-          <small>ENTER ↵</small>
+          <input ref="inputEl" v-model="input" class="math-capture" :readonly="locked" :aria-invalid="locked && !good" aria-describedby="answer-feedback" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your answer" @keydown="keydown">
+          <small v-if="!locked">ENTER ↵</small>
         </div>
-        <div class="feedback" :class="{ good, correction: correctionLatex }"><span>{{ message }}</span><div v-if="correctionLatex" v-html="latex(correctionLatex)"></div></div>
-        <div class="symbols" :class="{ open: symbolsOpen }"><button v-for="symbol in ['sin', 'cos', 'tan', 'sec', 'csc', 'cot', '(', ')', '^2', 'π', '√']" :key="symbol" @click="insert(symbol)">{{ symbol }}</button></div>
+        <div id="answer-feedback" class="answer-feedback" :class="{ success: locked && good, error: locked && !good }" role="status" aria-live="polite" aria-atomic="true">
+          <template v-if="locked">
+            <span class="feedback-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path v-if="good" d="m5 12 4 4L19 6" />
+                <path v-else d="m7 7 10 10M17 7 7 17" />
+              </svg>
+            </span>
+            <div class="feedback-content">
+              <div class="feedback-heading"><strong>{{ message }}</strong><span v-if="good && streak > 1" class="streak-badge">{{ streak }} in a row</span></div>
+              <p v-if="good">Nice work. Keep going.</p>
+              <template v-else><p>Correct answer</p><div class="feedback-answer" v-html="latex(correctionLatex)"></div><p class="retry-note">You’ll see this one again.</p></template>
+            </div>
+          </template>
+        </div>
+        <div class="symbols" :class="{ open: symbolsOpen }"><button v-for="symbol in ['sin', 'cos', 'tan', 'sec', 'csc', 'cot', '(', ')', '^2', 'π', '√']" :key="symbol" :disabled="locked" @click="insert(symbol)">{{ symbol }}</button></div>
       </article>
-      <footer><span><kbd>Enter</kbd> submit</span><span><kbd>H</kbd> hint</span><span><kbd>Tab</kbd> symbols</span><span>θ is optional · aliases: <code>s(</code>, <code>c(</code>, <code>t(</code></span></footer>
+      <footer><span><kbd>Enter</kbd> submit</span><span><kbd>Tab</kbd> symbols</span><span>θ is optional · aliases: <code>s(</code>, <code>c(</code>, <code>t(</code></span></footer>
     </section>
 
     <section v-else class="results">
       <p class="eyebrow">ROUND COMPLETE</p><h1>{{ resultTitle }}</h1><div class="score"><strong>{{ score }}</strong><span>POINTS</span></div>
       <div class="result-stats"><p><strong>{{ accuracy }}%</strong><span>ACCURACY</span></p><p><strong>{{ correct }}</strong><span>CORRECT ANSWERS</span></p><p><strong>{{ bestStreak }}</strong><span>BEST STREAK</span></p></div>
+      <p class="elapsed-summary">Time elapsed <strong>{{ elapsedTime }}</strong></p>
       <p class="note">{{ resultNote }}</p>
-      <div class="actions"><button @click="start(level, mode)">Try again</button><button v-if="mode === 'learn'" @click="start(level)">Practice →</button><button v-else-if="level < levels.length - 1 && unlocked(level + 1)" @click="review(level + 1)">Next level →</button><button v-else @click="screen = 'levels'">Levels →</button></div>
+      <div class="actions"><button @click="start(level, mode)">Try again</button><button v-if="mode === 'learn'" @click="start(level)">Practice →</button><button v-else-if="level < levels.length - 1" @click="review(level + 1)">Next level →</button><button @click="screen = 'levels'">Levels</button></div>
     </section>
   </main>
 </template>
@@ -196,6 +223,36 @@ onBeforeUnmount(() => clearTimeout(nextCardTimeout));
 .score { border-width: 1px; box-shadow: none; }
 .round-progress { background: #dce3eb; }
 .round-progress i { background: var(--accent); }
-@media (prefers-reduced-motion: reduce) { .level, .symbols { transition: none; } .math-caret { animation: none; } .math-editor.wrong { animation: none; } }
+.round-stats { display: flex; justify-self: end; gap: 22px; text-align: right; }
+.round-stats span { display: block; margin-bottom: 4px; font: 9px var(--font-mono); color: #63706e; letter-spacing: .08em; }
+.round-stats strong { display: block; font-variant-numeric: tabular-nums; }
+.elapsed-summary { margin-top: 18px; color: #63706e; font-size: 13px; }
+.elapsed-summary strong { margin-left: 8px; color: #172b42; font-family: var(--font-mono); }
+
+.question-card { transition: background-color .18s, border-color .18s, box-shadow .18s; }
+.question-card.answer-correct { background: #f3fbf5; border-color: #2c8054; box-shadow: 0 0 0 3px #2c80541a; }
+.question-card.answer-incorrect { background: #fff7f5; border-color: #bd4b3e; box-shadow: 0 0 0 3px #bd4b3e1a; }
+.math-editor.right, .math-editor.right:focus-within { border-color: #267346; color: #21653e; background: #e4f4e8; }
+.math-editor.wrong, .math-editor.wrong:focus-within { border-color: #b34135; color: #9b352c; background: #fce7e2; }
+.math-editor.right, .math-editor.wrong { border-radius: 8px 8px 0 0; }
+.question-card .math-editor.right .math-caret, .question-card .math-editor.wrong .math-caret { display: none; }
+.answer-feedback { display: flex; align-items: center; gap: 16px; min-height: 156px; max-width: 560px; box-sizing: border-box; margin: 18px auto; padding: 18px 20px; border: 1px solid transparent; border-radius: 12px; }
+.answer-feedback.success { color: #21653e; background: #e4f4e8; border-color: #afd5ba; }
+.answer-feedback.error { color: #9b352c; background: #fce7e2; border-color: #edb6ac; }
+.feedback-icon { display: grid; place-items: center; flex: 0 0 44px; height: 44px; border-radius: 50%; background: #267346; color: white; animation: feedback-pop .3s ease-out; }
+.error .feedback-icon { background: #b34135; }
+.feedback-icon svg { width: 26px; height: 26px; }
+.feedback-content { flex: 1; min-width: 0; }
+.feedback-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.feedback-heading strong { font-size: 23px; line-height: 1.2; font-weight: 650; }
+.streak-badge { padding: 4px 9px; border-radius: 20px; background: #267346; color: white; font: 11px var(--font-mono); }
+.feedback-content p { margin: 7px 0 0; font-size: 13px; line-height: 1.4; }
+.feedback-answer { overflow-x: auto; font-size: 21px; }
+.feedback-answer :deep(.katex-display) { margin: .4em 0; text-align: left; }
+.feedback-content .retry-note { font-size: 12px; }
+.symbols button:disabled { opacity: .45; cursor: default; }
+@keyframes feedback-pop { from { transform: scale(.7); opacity: .4; } to { transform: scale(1); opacity: 1; } }
+@media(max-width:600px) { .answer-feedback { padding: 16px 12px; gap: 12px; }.feedback-heading strong { font-size: 21px; }.feedback-answer { font-size: 17px; }.feedback-icon { flex-basis: 36px; height: 36px; }.feedback-icon svg { width: 22px; height: 22px; } }
+@media (prefers-reduced-motion: reduce) { .level, .symbols, .question-card { transition: none; } .math-caret, .feedback-icon { animation: none; } .math-editor.wrong { animation: none; } }
 
 </style>

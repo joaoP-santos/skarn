@@ -135,7 +135,8 @@ export function buildRound(index, mode, memories = {}, random = Math.random, now
   if (mode === "learn") return [...pool(index)];
   if (index === levels.length - 1) return reviewCards(allCards(), memories, 12, random, now);
   const fresh = pool(index);
-  const earlier = levels.slice(0, index).flatMap(level => level.entries);
+  const earlier = levels.slice(0, index).flatMap(level => level.entries)
+    .filter(entry => (memories[entry.id]?.strength || 0) > 0);
   const review = reviewCards(earlier, memories, 4, random, now);
   // Start with the new pair, then repeat it among a small sample of older facts.
   return [...shuffle(fresh, random), ...shuffle([
