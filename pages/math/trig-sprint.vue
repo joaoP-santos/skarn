@@ -139,7 +139,7 @@ onBeforeUnmount(() => clearTimeout(nextCardTimeout));
         <div class="meta"><span>{{ current.id.startsWith('1-') ? 'EXACT VALUE' : 'IDENTITY' }}</span><span>{{ mode === 'learn' ? 'LEARN' : 'RECALL' }}</span></div>
         <p>{{ mode === 'learn' ? 'Type the answer shown below' : (current.cue || 'Type the equivalent form') }}</p>
         <div class="formula" v-html="latex(current.shown)"></div>
-        <TrigUnitCircleDiagram v-if="current.id.startsWith('1-')" :card-index="Number(current.id.split('-')[1])" :show-values="mode === 'learn'" compact />
+        <TrigUnitCircleDiagram v-if="mode === 'learn' && current.id.startsWith('1-')" :card-index="Number(current.id.split('-')[1])" show-values compact />
         <div v-if="mode === 'learn'" class="learn-target"><span>COPY THIS</span><div v-html="latex(current.displayAnswer)"></div></div>
         <div class="math-editor" :class="{ right: good, wrong: locked && !good }" @click="inputEl?.focus()">
           <div class="rendered-answer"><span v-if="input" v-html="renderedInput"></span><span v-else class="placeholder">Type your answer</span><i class="math-caret"></i></div>
